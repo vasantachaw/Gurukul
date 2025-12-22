@@ -1,0 +1,163 @@
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} Check The Certificate {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %}
+        <!-- page-title -->
+        <div class="tf-page-title style-2">
+            <div class="container-full">
+                <div class="heading text-center"> Certificate Lookup & Verification</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        <!-- FAQ -->
+        <section class="flat-spacing-11">
+            <div class="container">
+                <div class="tf-accordion-wrap d-flex justify-content-between">
+                    <div class="content">
+                        <h5 class="mb_24">Certificate Verification</h5>
+                        <div class="flat-accordion style-default has-btns-arrow mb_60">
+                           
+                            <div class="flat-toggle active">
+                                {% if student_data %}
+                                    <div class="toggle-title active">
+                                        Your certificate has been successfully verified!
+                                    </div>
+                                    <div class="toggle-content d-flex align-items-start gap-20">
+                                        <!-- Certificate details -->
+                                        <div style="flex: 1; text-align: justify;">
+                                            <p>
+                                                This is to confirm that <strong>{{ student_data.first_name }} {{ student_data.last_name }}</strong>, son/daughter of <strong>{{ student_data.father_name | capfirst }}</strong>, born on <strong>{{ student_data.date_of_birth }}</strong>, has successfully enrolled in the <strong>{{ student_data.programs | capfirst }}</strong> course at <strong>{{ website.name | first_word }} Institute</strong>.  
+                                                The course enrollment started on <strong>{{ student_data.booking_date|date:"M j, Y"|default:"N/A" }}</strong> and was completed on <strong>{{ student_data.end_date }}</strong>.  
+                                                The registered address is <strong>{{ student_data.address }}</strong>.  
+                                                Contact details: Phone – <strong>{{ student_data.phone }}</strong>, Email – <strong>{{ student_data.email }}</strong>.
+                                            </p>
+                                        </div>
+
+
+                                        <!-- Certificate image -->
+                                        {% if student_data.profile_picture %}
+                                            <img src="{{ student_data.profile_picture.url }}" 
+                                                alt="Certificate" 
+                                                style="width: 80px; height: 80px; border: 1px solid orange; border-radius: 50%; object-fit: cover;">
+                                        {% endif %}
+
+                                    </div>
+                                        <div class="flat-toggle">
+                                            <div class="toggle-title">Show Certificate</div>
+                                            <div class="toggle-content">
+                                                {% if certificate_obj and certificate_obj.certificate_file %}
+                                                    <img id="certificateImage" src="{{ certificate_obj.certificate_file.url }}" 
+                                                        alt="Certificate" 
+                                                        style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px;">
+
+                                                    <!-- Buttons -->
+                                                    <div style="margin-top: 10px;">
+                                                        <!-- Download button -->
+                                                        <a href="{{ certificate_obj.certificate_file.url }}" 
+                                                        download="certificate_{{ certificate_obj.certificate_no }}.png" 
+                                                        class="btn btn-dark" 
+                                                        style="margin-right: 10px;">
+                                                            Download
+                                                        </a>
+
+                                                        <!-- Print button -->
+                                                        <button onclick="printCertificate()" class="btn btn-dark">
+                                                            Print
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Print JS -->
+                                                    <script>
+                                                        function printCertificate() {
+                                                            var imgSrc = document.getElementById("certificateImage").src;
+                                                            var w = window.open("", "_blank");
+                                                            w.document.write('<html><head><title>Print Certificate</title></head><body style="margin:0; padding:0;">');
+                                                            w.document.write('<img id="printImg" src="' + imgSrc + '" style="width:100%; height:auto;">');
+                                                            w.document.write('</body></html>');
+                                                            w.document.close();
+
+                                                            // Wait for image to load before printing
+                                                            w.document.getElementById('printImg').onload = function() {
+                                                                w.focus();
+                                                                w.print();
+                                                                w.close();
+                                                            };
+                                                        }
+                                                    </script>
+
+                                                {% else %}
+                                                    <p>Certificate not available.</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                {% else %}
+                                    <div class="toggle-title active">
+                                        Certificate Not Verified
+                                    </div>
+                                    <div class="toggle-content">
+                                        <p>
+                                            We could not verify the certificate details.
+                                            Please check the information provided or contact <strong>{{ website.name }}</strong> support for assistance.
+                                        </p>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+
+                        </div>
+                        
+                    </div>
+
+                    <div class="box tf-other-content radius-10 bg_grey-8">
+                        <h5 class="mb_20">Certificate Verification</h5>
+                        
+                       <form id="form-profile-update" action="{% url 'verify_certificate' %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            
+                            <!-- Date of Birth -->
+                            <div class="tf-field style-1 mb_15">
+                                <input 
+                                    class="tf-field-input tf-input" 
+                                    placeholder=" " 
+                                    type="date" 
+                                    id="dob" 
+                                    name="dob" 
+                                    required
+                                >
+                                <label class="tf-field-label fw-4 text_black-2" for="dob">Date of Birth</label>
+                            </div>
+
+                            <!-- Certificate Number -->
+                            <div class="tf-field style-1 mb_15">
+                                <input 
+                                    class="tf-field-input tf-input" 
+                                    placeholder=" " 
+                                    type="text" 
+                                    id="certificate_number" 
+                                    name="certificate_number" 
+                                    required
+                                >
+                                <label class="tf-field-label fw-4 text_black-2" for="certificate_number">Certificate Registration Number</label>
+                            </div>
+
+                            <!-- Submit button -->
+                            <div class="d-flex gap-20 align-items-center">
+                                <button type="submit" class="tf-btn radius-3 btn-fill animate-hover-btn justify-content-center">
+                                    Verify Certificate
+                                </button>
+                                <a href="{% url 'contact' %}" class="tf-btn btn-line">
+                                    Contact Us<i class="icon icon-arrow1-top-left"></i>
+                                </a>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /FAQ -->
+     
+{% endblock main_content %}

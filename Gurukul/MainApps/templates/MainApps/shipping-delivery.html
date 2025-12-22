@@ -1,0 +1,51 @@
+
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} Shipping & Delivery {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %} 
+        <!-- page-title -->
+        <div class="tf-page-title style-2">
+            <div class="container-full">
+                <div class="heading text-center">Shipping & Delivery</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        <!-- main-page -->
+       <section class="flat-spacing-25">
+    <div class="container">
+        <div class="tf-main-area-page tf-page-delivery">
+            <div class="box">
+                <h4>Delivery</h4>
+                {% for charge in shipping_charges %}
+                    <p>All orders shipped with {{ charge.carrier_name }} for {{ charge.get_location_display }}: Rs {{ charge.charge }}.</p>
+                {% endfor %}
+                <p>Always free shipping for orders over US Rs 1L.</p>
+                <p>All orders are shipped with a tracking number.</p>
+            </div>
+            <div class="box">
+                <h4>Returns</h4>
+                {% for charge in shipping_charges %}
+                    {% if charge.location == 'in_valley' %}
+                        <p>Products can be returned within {{ charge.product_return_in_days }} days in the same as new condition to be eligible for a refund or store credit.</p>
+                    {% endif %}
+                {% endfor %}
+
+                <p>Refunds will be charged back to the original form of payment used for purchase.</p>
+                <p>Customer is responsible for shipping charges when making returns and shipping/handling fees of original purchase are non-refundable.</p>
+                <p>All sale items are final purchases.</p>
+            </div>
+            <div class="box">
+                <h4>Help</h4>
+                <p>Give us a shout if you have any other questions and/or concerns.</p>
+                <p>Email: <a href="mailto:{{website.email}}" class="cf-mail">{{website.email}}</a></p>
+                <p>Phone: {{website.phone}}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- /main-page -->
+     
+{% endblock %}

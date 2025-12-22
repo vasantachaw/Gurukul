@@ -1,0 +1,55 @@
+{% extends 'MainApps/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}My Account{% endblock %}
+
+{% block main_content %}
+        <!-- page-title -->
+        <div class="tf-page-title">
+            <div class="container-full">
+                <div class="heading text-center">My Account</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        
+        <!-- page-cart -->
+        <section class="flat-spacing-11">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <ul class="my-account-nav">
+                           <li><span class="my-account-nav-item active">Dashboard</span></li>
+
+                            {% if user.is_authenticated %}
+                                {% if user.is_superuser %}
+                                    <li><a href="{% url "admin_orders" %}" class="my-account-nav-item"> Orders </a></li>
+                                {% else %}
+                                    <li><a href="{% url 'myorder' %}" class="my-account-nav-item">Orders</a></li>
+                                {% endif %}
+                            {% else %}
+                                <li><a href="{% url 'login' %}" class="my-account-nav-item">Login</a></li>
+                            {% endif %}
+
+
+                            <li><a href="{% url "myaddress" %}" class="my-account-nav-item">Addresses</a></li>
+                            <li><a href="{% url "edit_password" %}" class="my-account-nav-item">Change Password</a></li>
+                            <li><a href="{% url "logout" %}" class="my-account-nav-item">Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="my-account-content account-dashboard">
+                            <div class="mb_60">
+                                <h5 class="fw-5 mb_20">Hello {{request.user.username}}</h5>
+                                <p>
+                                    From your account dashboard you can view your <a class="text_primary" href="{% url "myorder" %}">recent orders</a>, manage your <a class="text_primary" href="{% url "myorder" %}">shipping and billing addresses</a>, and <a class="text_primary" href="{% url "myaddress" %}">edit your password and account details</a>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- page-cart -->
+
+    {% endblock %}

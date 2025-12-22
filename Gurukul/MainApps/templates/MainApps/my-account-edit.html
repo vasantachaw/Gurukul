@@ -1,0 +1,99 @@
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} Password Change {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %} 
+    <!-- Main content -->
+        <!-- page-title -->
+        <div class="tf-page-title">
+            <div class="container-full">
+                <div class="heading text-center">Password Change</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        
+        <!-- page-cart -->
+        <section class="flat-spacing-11">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <ul class="my-account-nav">
+                            <li><a href="{% url "myaccount" %}" class="my-account-nav-item ">Dashboard</a></li>
+                            <li><a href="{% url "myorder" %}" class="my-account-nav-item">Orders</a></li>
+                            <li><a href="{% url "myaddress" %}" class="my-account-nav-item">Addresses</a></li>
+                            <li><span class="my-account-nav-item active">Change Password</span></li>
+                            <li><a href="{% url "logout" %}" class="my-account-nav-item">Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="my-account-content account-edit">
+                            <div class="">
+                                <form id="form-password-change" method="POST" action="{% url 'change_password' %}">
+                                    {% csrf_token %}
+                                    <h6 class="mb_20">Password Change</h6>
+
+                                    <div class="tf-field style-1 mb_30">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="password" id="current_password" name="current_password">
+                                        <label class="tf-field-label fw-4 text_black-2" for="current_password">Current password</label>
+                                    </div>
+
+                                    <div class="tf-field style-1 mb_30">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="password" id="new_password" name="new_password">
+                                        <label class="tf-field-label fw-4 text_black-2" for="new_password">New password</label>
+                                    </div>
+
+                                    <div class="tf-field style-1 mb_30">
+                                        <input class="tf-field-input tf-input" placeholder=" " type="password" id="confirm_password" name="confirm_password">
+                                        <label class="tf-field-label fw-4 text_black-2" for="confirm_password">Confirm password</label>
+                                    </div>
+
+                                    <div class="mb_20">
+                                        <button type="submit" class="tf-btn w-100 radius-3 btn-fill animate-hover-btn justify-content-center">
+                                            Save Changes
+                                        </button>
+                                    </div>
+
+                                    <p id="password-message" class="text-center mt_10"></p>
+                                </form>
+                                <script>
+                                    document.getElementById('form-password-change').addEventListener('submit', async function(e) {
+                                        e.preventDefault();
+
+                                        const form = e.target;
+                                        const formData = new FormData(form);
+                                        const messageEl = document.getElementById('password-message');
+
+                                        try {
+                                            const response = await fetch(form.action, {
+                                                method: 'POST',
+                                                body: formData,
+                                                headers: {
+                                                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                                                }
+                                            });
+
+                                            const data = await response.json();
+                                            messageEl.innerText = data.message;
+                                            messageEl.style.color = data.status === 'success' ? 'green' : 'red';
+
+                                            if (data.status === 'success') {
+                                                form.reset();
+                                            }
+
+                                        } catch (error) {
+                                            messageEl.innerText = "Something went wrong!";
+                                            messageEl.style.color = "red";
+                                        }
+                                    });
+                                    </script>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- page-cart -->
+{% endblock %}

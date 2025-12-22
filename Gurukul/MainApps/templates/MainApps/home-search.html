@@ -1,0 +1,89 @@
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} Search {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %} 
+        <!-- page-title -->
+        <div class="tf-page-title style-2">
+            <div class="container-full">
+                <div class="heading text-center">Search</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        <div class="flat-spacing-8 page-search-inner">
+            <div class="tf-search-head">
+                <form class="tf-mini-search-frm" method="get" action="{% url 'search_query' %}">
+                        <fieldset class="text">
+                            <input 
+                                type="text" 
+                                name="q" 
+                                placeholder="Search products or courses..." 
+                                value="{{ request.GET.q }}" 
+                                required
+                            >
+                        </fieldset>
+                        <button type="submit"><i class="icon-search"></i></button>
+                </form>
+                <div class="tf-col-quicklink">
+                    <span class="title">Quick link:</span>
+                    <a href="{% url "courseList" %}" style="text-decoration:underline;">Courses</a> &nbsp;&nbsp;&nbsp;
+                    <a href="{% url "productList" %}"  style="text-decoration:underline;">Computers & Accessories</a>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="tf-search-content-title">
+                            Need some inspiration?
+                        </div>
+                    </div>
+                    {% for result in results %}
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="card-product mb_30">
+                            <div class="card-product-wrapper">
+                                <a href="{% url 'Pc_ProductView' result.id %}" class="product-img">
+                                    {% if result.images.first %}
+                                        <img class="lazyload img-product"
+                                            src="{{ result.images.first.image.url }}"
+                                            alt="{{ result.name }}">
+                                        <img class="lazyload img-hover"
+                                            src="{{ result.images.first.image.url }}"
+                                            alt="{{ result.name }}">
+                                    {% else %}
+                                        <img src="{% static 'default.jpg' %}" alt="No image">
+                                    {% endif %}
+                                </a>
+                                <div class="list-product-btn">
+                                    <a href="{% url 'add_pc_to_cart' result.id %}" 
+                                        class="box-icon bg_white wishlist btn-icon-action" 
+                                        data-course-id="{{ result.id }}">
+                                        <span class="icon icon-bag"></span>
+                                        <span class="tooltip">Quick Add</span>
+                                        <span class="icon icon-check"></span>
+                                    </a>
+                                    
+                                </div>
+                               
+                            </div>
+                            <div class="card-product-info">
+                                <a href="{% url 'Pc_ProductView' result.pk %}" class="title">{{ result.name }}</a>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                                    <span style="font-weight: 600;  font-size: 1rem;">
+                                        Rs {{ result.discount_price }}
+                                    </span>
+                                    <span style="color: #888; text-decoration: line-through; font-size: 0.9rem;">
+                                        Rs {{ result.real_price }}
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+{% endblock %}

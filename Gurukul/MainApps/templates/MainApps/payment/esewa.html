@@ -1,0 +1,123 @@
+{% extends 'MainApps/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %} Payment confirmation {% endblock %}
+
+{% block main_content %}
+
+<div class="tf-page-title">
+    <div class="container-full">
+        <div class="heading text-center">Payment confirmation</div>
+    </div>
+</div>
+
+<section class="flat-spacing-11">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                
+                <h5 class="fw-5 mb_20">Payment confirmation</h5>
+                <div class="tf-page-cart-checkout">
+
+                    <!-- Date -->
+                    <div class="d-flex align-items-center justify-content-between mb_15">
+                        <div class="fs-18">Date</div>
+                        <p>{% now "d/m/Y" %}</p>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="d-flex align-items-center justify-content-between mb_15">
+                        <div class="fs-18">Payment Method</div>
+
+                        <p>
+                            {% if payment_method == "cod" %}
+                                <span style="color:#FF9800;">
+                                    <i class="fa-solid fa-truck fs-5"></i> Cash on Delivery
+                                </span>
+                            {% elif payment_method == "esewa" %}
+                                <span style="color:#4CAF50;">
+                                    <img src="{% static 'MainApps/images/paymentWallet/esewa.png' %}" style="height:26px;"> 
+                                    eSewa Wallet
+                                </span>
+                            {% elif payment_method == "khalti" %}
+                                <span style="color:#de2319ff;">
+                                    <img src="{% static 'MainApps/images/paymentWallet/khalti.png' %}" style="height:26px;"> 
+                                    Khalti Wallet
+                                </span>
+                            {% elif payment_method == "paypal" %}
+                                <span style="color:#0070BA;">
+                                    <img src="{% static 'MainApps/images/paymentWallet/paypal.png' %}" style="height:26px;"> 
+                                    PayPal
+                                </span>
+                            {% else %}
+                                <span>{{ payment_method|capfirst }}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div class="d-flex align-items-center justify-content-between mb_15">
+                        <div class="fs-18">Full Name</div>
+                        <p>{{ full_name }}</p>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="d-flex align-items-center justify-content-between mb_15">
+                        <div class="fs-18">Email</div>
+                        <p>{{ email }}</p>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="d-flex align-items-center justify-content-between mb_15">
+                        <div class="fs-18">Phone</div>
+                        <p>(+977) - {{ phone }}</p>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="d-flex align-items-center justify-content-between mb_15">
+                        <div class="fs-18">Address</div>
+                        <p>{{ address|capfirst }}, {{ city }}, {{ district }}</p>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="d-flex align-items-center justify-content-between mb_15">
+                        <div class="fs-18">Total quantity</div>
+                        <p>{{ total_cart_count }}</p>
+                    </div>
+
+                    <!-- Subtotal -->
+                    <div class="d-flex align-items-center justify-content-between mb_24">
+                        <div class="fs-22 fw-6">Subtotal</div>
+                        <span class="total-value fw-6">Rs. {{ total_cart_amount }}</span>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-10">
+                        <a href="{% url 'checkout' %}" 
+                           class="tf-btn w-100 btn-outline animate-hover-btn rounded-0 justify-content-center">
+                            <span>Cancel Payment</span>
+                        </a>
+
+                        <!-- eSewa Payment Form -->
+                        <form action="https://rc-epay.esewa.com.np/api/epay/main/v2/form" 
+                              method="POST" class="w-100">
+
+                            {% for key, value in data.items %}
+                                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                            {% endfor %}
+
+                            <button type="submit"  class="tf-btn w-100 btn-fill animate-hover-btn radius-3 justify-content-center">
+                                Pay with eSewa
+                            </button>
+
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

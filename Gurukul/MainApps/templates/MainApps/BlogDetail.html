@@ -1,0 +1,93 @@
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} Blog {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %} 
+
+        <!-- blog-detail -->
+        <div class="blog-detail">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="blog-detail-main">
+                            <div class="blog-detail-main-heading">
+                                
+                                <div class="title">{{ blog.title }}</div>
+                                <div class="meta">by <span>{{ blog.author }}</span> on <span>{{ blog.created_at|date:"M d, Y" }}</span></div>
+                                <div class="image">
+                                   {{blog.content|safe}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btn-sidebar-mobile d-flex">
+            <button data-bs-toggle="offcanvas" data-bs-target="#sidebarmobile" aria-controls="offcanvasRight"><i class="icon-open"></i></button>
+        </div>
+        <!-- /blog-detail -->
+
+        <!-- Related Articles -->
+      <section class="mb_30">
+    <div class="container">
+        <div class="flat-title">
+            <h5 class="">Related Articles</h5>
+        </div>
+        <div class="hover-sw-nav view-default hover-sw-5">
+            <div class="swiper tf-sw-recent"
+                 data-preview="3"
+                 data-tablet="2"
+                 data-mobile="1"
+                 data-space-lg="30"
+                 data-space-md="30"
+                 data-space="15"
+                 data-pagination="1"
+                 data-pagination-md="1"
+                 data-pagination-lg="1">
+                 
+                <div class="swiper-wrapper">
+                    {% for blog in related_blogs %}
+                    <div class="swiper-slide" lazy="true">
+                        <div class="blog-article-item">
+                            <div class="article-thumb radius-10">
+                                <a href="{% url "blog_detail" blog.pk %}">
+                                    {% if blog.thumbnail %}
+                                        <img class="lazyload" data-src="{{ blog.thumbnail.url }}" src="{{ blog.thumbnail.url }}" alt="{{ blog.title }}">
+                                    {% endif %}
+                                </a>
+                                {% if blog.category %}
+                                <div class="article-label">
+                                    <a href="{% url 'blog-category' blog.category %}" class="tf-btn style-2 btn-fill radius-3 animate-hover-btn">
+                                        {{ blog.category }}
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="article-content">
+                                <div class="article-title">
+                                    <a href="{% url "blog_detail" blog.pk %}">{{ blog.title }}</a>
+                                </div>
+                                <div class="article-btn">
+                                    <a href="" class="tf-btn btn-line fw-6">
+                                        Read more<i class="icon icon-arrow1-top-left"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="nav-sw nav-next-slider nav-next-recent box-icon w_46 round"><span class="icon icon-arrow-left"></span></div>
+            <div class="nav-sw nav-prev-slider nav-prev-recent box-icon w_46 round"><span class="icon icon-arrow-right"></span></div>
+            <div class="sw-dots d-flex style-2 sw-pagination-recent justify-content-center"></div>
+        </div>
+    </div>
+</section>
+
+        <!-- /Related Articles -->
+{% endblock %}

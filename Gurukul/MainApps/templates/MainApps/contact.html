@@ -1,0 +1,102 @@
+
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} Contact us {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %} 
+    <!-- Main content -->
+        <!-- page-title -->
+        <div class="tf-page-title style-2">
+            <div class="container-full">
+                <div class="heading text-center">Contact Us</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        <!-- map -->
+        <div class="w-100">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d887.6861479071498!2d84.95691071260667!3d27.132853498532302!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb54df192fdfe5%3A0xd884a8fff8f334f7!2sGurukul%20Computer%20Institute!5e0!3m2!1sen!2snp!4v1763020660344!5m2!1sen!2snp" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>        </div>
+        <!-- /map -->
+        <!-- form -->
+        <section class="flat-spacing-21">
+            <div class="container">
+                <div class="tf-grid-layout gap30 lg-col-2">
+                    <div class="tf-content-left">
+                        <h5 class="mb_20">Visit Our {{website.name | first_word }}</h5>
+                        <div class="mb_20">
+                            <p class="mb_15"><strong>Address</strong></p>
+                            <p>{{ website.address }}</p>
+                        </div>
+                        <div class="mb_20">
+                            <p class="mb_15"><strong>Phone</strong></p>
+                            <p>{{ website.phone }}</p>
+                        </div>
+                        <div class="mb_20">
+                            <p class="mb_15"><strong>Email</strong></p>
+                            <p>{{ website.email }}</p>
+                        </div>
+                        <div class="mb_36">
+                            <p class="mb_15"><strong>Open Time</strong></p>
+                            <p class="mb_15">Our store has re-opened for shopping, </p>
+                            <p>exchange Every day 11am to 7pm</p>
+                        </div>
+                        <div>
+                            <ul class="tf-social-icon d-flex gap-20 style-default">
+                                <li><a href="#" class="box-icon link round social-facebook border-line-black"><i class="icon fs-14 icon-fb"></i></a></li>
+                                <li><a href="#" class="box-icon link round social-twiter border-line-black"><i class="icon fs-12 icon-Icon-x"></i></a></li>
+                                <li><a href="#" class="box-icon link round social-instagram border-line-black"><i class="icon fs-14 icon-instagram"></i></a></li>
+                                <li><a href="#" class="box-icon link round social-tiktok border-line-black"><i class="icon fs-14 icon-tiktok"></i></a></li>
+                                <li><a href="#" class="box-icon link round social-pinterest border-line-black"><i class="icon fs-14 icon-pinterest-1"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tf-content-right">
+                        <h5 class="mb_20">Get in Touch</h5>
+                        <p class="mb_24">If you’ve got great products your making or looking to work with us then drop us a line.</p>
+                        <div>
+                           <form class="form-contact" id="contactform" method="post" action="{% url 'contact' %}">
+                                {% csrf_token %}
+                                <div class="d-flex gap-15 mb_15">
+                                    <fieldset class="w-100">
+                                        <input type="text" name="name" id="name" required placeholder="Name *"/>
+                                    </fieldset>
+                                    <fieldset class="w-100">
+                                        <input type="email" name="email" id="email" required placeholder="Email *"/>
+                                    </fieldset>
+                                </div>
+                                <div class="mb_15">
+                                    <textarea placeholder="Message" name="message" id="message" required cols="30" rows="10"></textarea>
+                                </div>
+                                <div class="send-wrap">
+                                    <button type="submit" class="tf-btn w-100 radius-3 btn-fill animate-hover-btn justify-content-center">Send</button>
+                                </div>
+                            </form>
+
+                            <!-- Messages / Alerts -->
+                            {% if messages %}
+                                <div class="mt-3">
+                                    {% for msg in messages %}
+                                        <div class="alert 
+                                            {% if msg.tags == 'success' %}alert-success
+                                            {% elif msg.tags == 'error' %}alert-danger
+                                            {% elif msg.tags == 'warning' %}alert-warning
+                                            {% else %}alert-info{% endif %}
+                                            alert-dismissible fade show" role="alert">
+                                            {{ msg }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            <!-- Optional: Bootstrap JS for dismissible alert -->
+                            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /form -->
+       {% endblock %} # to end the main content block

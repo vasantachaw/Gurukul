@@ -1,0 +1,160 @@
+{% extends 'MainApps/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Customer Orders{% endblock %}
+
+{% block main_content %}
+
+<div class="tf-page-title">
+    <div class="container-fluid">
+        <div class="heading text-center">Customer Orders</div>
+    </div>
+</div>
+<section class="flat-spacing-11" style="width:100%; padding:20px 20px;">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-lg-3 mb-3">
+                <ul class="my-account-nav">
+                    <li><a href="{% url "myaccount" %}" class="my-account-nav-item">Dashboard</a></li>
+                    <li><span class="my-account-nav-item active">Orders</span></li>
+                    <li><a href="{% url 'myaddress' %}" class="my-account-nav-item">Addresses</a></li>
+                    <li><a href="{% url 'edit_password' %}" class="my-account-nav-item">Change Password</a></li>
+                    <li><a href="{% url 'logout' %}" class="my-account-nav-item">Logout</a></li>
+                </ul>
+            </div>
+
+            <div class="col-lg-9">
+                <form method="GET" class="d-flex flex-wrap flex-md-nowrap align-items-center gap-2 mb-3" style="overflow-x:auto;">
+
+                    <input type="text" name="search" placeholder="Search..." value="{{ search }}"
+                        class="form-control flex-grow-1" style="min-width:150px; height:40px;">
+
+                    <select name="payment_method" class="form-control flex-grow-1" style="min-width:150px; height:40px;">
+                        <option value="">All Payments</option>
+                        <option value="cod" {% if payment_filter == 'cod' %}selected{% endif %}>Cash on Delivery</option>
+                        <option value="esewa" {% if payment_filter == 'esewa' %}selected{% endif %}>eSewa</option>
+                        <option value="khalti" {% if payment_filter == 'khalti' %}selected{% endif %}>Khalti</option>
+                        <option value="paypal" {% if payment_filter == 'paypal' %}selected{% endif %}>PayPal</option>
+                        <option value="bank" {% if payment_filter == 'bank' %}selected{% endif %}>Bank Transfer</option>
+                    </select>
+
+                    <select name="order_status" class="form-control flex-grow-1" style="min-width:150px; height:40px;">
+                        <option value="">Order Status</option>
+                        <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Processing" {% if status_filter == 'Processing' %}selected{% endif %}>Processing</option>
+                        <option value="Shipped" {% if status_filter == 'Shipped' %}selected{% endif %}>Shipped</option>
+                        <option value="Delivered" {% if status_filter == 'Delivered' %}selected{% endif %}>Delivered</option>
+                        <option value="Cancelled" {% if status_filter == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                    </select>
+
+                    <input type="date" name="start_date" value="{{ start_date }}" class="form-control flex-grow-1" style="min-width:150px; height:40px;">
+                    <input type="date" name="end_date" value="{{ end_date }}" class="form-control flex-grow-1" style="min-width:150px; height:40px;">
+
+                    <button class="btn btn-dark" type="submit" style="height:40px; white-space:nowrap; flex-shrink:0;">Filter</button>
+                    
+                </form>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered align-middle text-center" style="min-width: 800px;"> 
+                        <thead class="table-light"> 
+                            <tr>
+                                <th style="white-space: nowrap;">S.No</th>
+                                <th style="white-space: nowrap;">Order Code</th>
+                                <th style="white-space: nowrap;">Full Name</th>
+                                <th style="white-space: nowrap;">Pay Method</th>
+                                <th style="white-space: nowrap;">Total Amount</th>
+                                <th style="white-space: nowrap;">Order Status</th>
+                                <th style="white-space: nowrap;">Created At</th>
+                                <th style="white-space: nowrap;">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>{{ forloop.counter0|add:orders.start_index|add:"-1" }}</td>
+                                <td style="white-space: nowrap;">{{ order.order_code }}</td>
+                                <td style="white-space: nowrap;">{{ order.full_name }}</td>
+                                <td style="white-space: nowrap;">{{ order.get_payment_method_display }}</td>
+                                <td style="white-space: nowrap;">Rs. {{ order.total_transaction_amount|floatformat:2 }}</td>
+                                <td>
+                                    <span class="badge 
+                                        {% if order.transaction_status == 'Pending' %}bg-warning
+                                        {% elif order.transaction_status == 'Refunded' %}bg-info
+                                        {% elif order.transaction_status == 'Completed' %}bg-success
+                                        {% elif order.transaction_status == 'Failed' %}bg-danger
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ order.transaction_status }}
+                                    </span>
+                                </td>
+                                <td style="white-space: nowrap;">{{ order.created_at|date:"d/m/Y" }}</td>
+                                <td style="white-space: nowrap;">
+                                    <a href="{% url 'generate_invoice' order.id %}" 
+                                    class="btn btn-sm" 
+                                    style="background-color: #d3d3d3; color: #000; transition: background-color 0.3s; padding: .25rem .5rem; font-size: .875rem;" 
+                                    onmouseover="this.style.backgroundColor='#bfbfbf';" 
+                                    onmouseout="this.style.backgroundColor='#d3d3d3';">
+                                    Invoice
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center">No orders found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center flex-wrap">
+
+                        {% if orders.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link"
+                            href="?page={{ orders.previous_page_number }}&search={{ search }}&payment_method={{ payment_filter }}&order_status={{ status_filter }}&start_date={{ start_date }}&end_date={{ end_date }}"
+                            style="background-color:#343a40; color:#fff; margin:2px; transition: background-color 0.3s;"
+                            onmouseover="this.style.backgroundColor='#495057';"
+                            onmouseout="this.style.backgroundColor='#343a40';">
+                            Previous
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        {% for num in orders.paginator.page_range %}
+                        <li class="page-item {% if orders.number == num %}active{% endif %}">
+                            <a class="page-link"
+                            href="?page={{ num }}&search={{ search }}&payment_method={{ payment_filter }}&order_status={{ status_filter }}&start_date={{ start_date }}&end_date={{ end_date }}"
+                            style="background-color: {% if orders.number == num %}#495057{% else %}#343a40{% endif %}; color:#fff; margin:2px; transition: background-color 0.3s;"
+                            onmouseover="this.style.backgroundColor='#495057';"
+                            onmouseout="this.style.backgroundColor='{% if orders.number == num %}#495057{% else %}#343a40{% endif %}';">
+                            {{ num }}
+                            </a>
+                        </li>
+                        {% endfor %}
+
+                        {% if orders.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                            href="?page={{ orders.next_page_number }}&search={{ search }}&payment_method={{ payment_filter }}&order_status={{ status_filter }}&start_date={{ start_date }}&end_date={{ end_date }}"
+                            style="background-color:#343a40; color:#fff; margin:2px; transition: background-color 0.3s;"
+                            onmouseover="this.style.backgroundColor='#495057';"
+                            onmouseout="this.style.backgroundColor='#343a40';">
+                            Next
+                            </a>
+                        </li>
+                        {% endif %}
+
+                    </ul>
+                </nav>
+
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

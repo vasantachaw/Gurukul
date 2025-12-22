@@ -1,0 +1,62 @@
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} Websites & Apps {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %}
+        <!-- page-title -->
+        <div class="tf-page-title style-2">
+            <div class="container-full">
+                <div class="heading text-center"> Digital Solutions & Service Pricing</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        <!-- FAQ -->
+        <section class="flat-spacing-11">
+            <div class="container">
+                <div class="tf-accordion-wrap d-flex justify-content-between">
+                    <div class="content">
+                       {% for category, services in grouped_services.items %}
+                            
+                            {% for service in services %}
+                                <h5 class="mb_24">{{ service.name }}</h5>
+                                <div class="flat-accordion style-default has-btns-arrow mb_60">
+                                    <div class="flat-toggle active">
+                                        <div class="toggle-title active">
+                                            {% if service.category == "WEB_DEVELOPMENT" %}
+                                                Affordable, professional, and responsive websites for every business.
+                                            {% elif service.category == "IT_SUPPORT" %}
+                                                Reliable, professional, and fast IT solutions tailored for your business needs.
+                                            {% elif service.category == "DIGITAL_DESIGN" %}
+                                                Professional design services to enhance your brand and digital presence.
+                                            {% else %}
+                                                {{ service.name }} services tailored for your business needs.
+                                            {% endif %}
+                                        </div>
+                                        <div class="toggle-content">
+                                            <p>{{ service.description | safe }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                  <hr>
+                                  <br><br>
+                            {% endfor %}
+                          
+                        {% endfor %}
+
+                    </div>
+                    <div class="box tf-other-content radius-10 bg_grey-8">
+                        <h5 class="mb_20">Have a question</h5>
+                        <p class="text_black-2 mb_40">If you need support or have any questions about our digital services, click the button below to chat with our Customer Service team.
+                            Refunds for service cancellations are processed within 6–12 business days after approval</p>
+                        <div class="d-flex gap-20 align-items-center">
+                            <a href="{% url "contact" %}" class="tf-btn radius-3 btn-fill animate-hover-btn justify-content-center">Contact us</a>
+                            <a href="https://maps.app.goo.gl/zwyCavVkQY2ZrgCf9" target="_blank"class="tf-btn btn-line">GET DIRECTION<i class="icon icon-arrow1-top-left"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /FAQ -->
+     
+{% endblock main_content %}

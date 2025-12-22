@@ -1,0 +1,116 @@
+{% extends 'MainApps/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %} Payment confirmation {% endblock %}
+
+{% block main_content %}
+
+        <!-- page-title -->
+        <div class="tf-page-title">
+            <div class="container-full">
+                <div class="heading text-center">Payment confirmation</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        
+        <!-- page-cart -->
+        <section class="flat-spacing-11">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                        <h5 class="fw-5 mb_20" style="margin-bottom: 20px;">Payment confirmation</h5>
+                        <div class="tf-page-cart-checkout">
+                            <div class="d-flex align-items-center justify-content-between mb_15">
+                                
+                                <div class="fs-18">Date</div>
+                                <p>{% now "d/m/Y" %}</p>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mb_15">
+                                <div class="fs-18">Payment Method</div>
+
+                               <p>
+                                    {% if payment_method == "cod" %}
+                                        <span style="color: #FF9800;">
+                                            <i class="fa-solid fa-truck fs-5"></i> Cash on Delivery
+                                        </span>
+                                    {% elif payment_method == "esewa" %}
+                                        <span style="color: #4CAF50;">
+                                            <img src="{% static 'MainApps/images/paymentWallet/esewa.png' %}" alt="eSewa" style="height:26px; vertical-align:middle;"> eSewa Wallet
+                                        </span>
+                                    {% elif payment_method == "khalti" %}
+                                        <span style="color: #de2319ff;">
+                                            <img src="{% static 'MainApps/images/paymentWallet/khalti.png' %}" alt="Khalti" style="height:26px; vertical-align:middle;"> Khalti Wallet
+                                        </span>
+                                    {% elif payment_method == "paypal" %}
+                                        <span style="color: #0070BA;">
+                                            <img src="{% static 'MainApps/images/paymentWallet/paypal.png' %}" alt="PayPal" style="height:26px; vertical-align:middle;"> PayPal
+                                        </span>
+                                    {% else %}
+                                        <span>{{ payment_method|capfirst }}</span>
+                                    {% endif %}
+                                </p>
+
+                            </div>
+                           
+                            <div class="d-flex align-items-center justify-content-between mb_15">
+                                <div class="fs-18">Full Name</div>
+                                <p>{{ first_name | capfirst }} {{ last_name | capfirst  }}</p>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mb_15">
+                                <div class="fs-18">Email</div>
+                                <p>{{ email }}</p>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mb_15">
+                                <div class="fs-18">Phone</div>
+                                <p>(+977) - {{phone}}</p>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mb_15">
+                                <div class="fs-18">Address</div>
+                                <p>{{ address | capfirst }}</p>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mb_15">
+                                <div class="fs-18">Total quantity</div>
+                                <p>{{ total_cart_count }}</p>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-between mb_24">
+                                <div class="fs-22 fw-6">Subtotal</div>
+                                <span class="total-value fw-6">Rs. {{ total_cart_amount }}</span>
+                            </div>
+                            <div class="d-flex gap-10">
+                                <a href="{% url "checkout" %}" class="tf-btn w-100 btn-outline animate-hover-btn rounded-0 justify-content-center">
+                                    <span>Cancel Payment</span>
+                                </a>
+                               {% if payment_method == "esewa" %}
+                                    <a href="" 
+                                    class="tf-btn w-100 btn-fill animate-hover-btn radius-3 justify-content-center">
+                                        <span>Confirm Payment</span>
+                                    </a>
+
+                                {% elif payment_method == "khalti" %}
+                                    <a href="" 
+                                    class="tf-btn w-100 btn-fill animate-hover-btn radius-3 justify-content-center">
+                                        <span>Confirm Payment</span>
+                                    </a>
+
+                                {% elif payment_method == "paypal" %}
+                                    <a href="" 
+                                    class="tf-btn w-100 btn-fill animate-hover-btn radius-3 justify-content-center">
+                                        <span>Confirm Payment</span>
+                                    </a>
+
+                                {% elif payment_method == "cod" %}
+                                    <a href="{% url "cash_on_delivery" %}" 
+                                    class="tf-btn w-100 btn-fill animate-hover-btn radius-3 justify-content-center">
+                                        <span>Confirm Order</span>
+                                    </a>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- page-cart -->
+
+{% endblock %}

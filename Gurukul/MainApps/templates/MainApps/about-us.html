@@ -1,0 +1,220 @@
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} About us {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %}
+       
+      <!-- Slider -->
+        <section class="tf-slideshow about-us-page position-relative" style="width:100%; overflow:hidden; position:relative;">
+            <div class="banner-wrapper" style="position:relative; width:100%; height:auto;">
+                {% if gurukul and gurukul.image %}
+                    <img 
+                        class="lazyload" 
+                        src="{{ gurukul.image.url }}" 
+                        alt="{{ gurukul.title }}" 
+                        style="width:100%; height:auto; object-fit:cover; display:block;"
+                    >
+                {% else %}
+                    <img 
+                        src="{% static 'images/slider/about-banner-01.jpg' %}" 
+                        alt="Default Banner" 
+                        style="width:100%; height:auto; object-fit:cover; display:block;"
+                    >
+                {% endif %}
+
+                
+            </div>
+        </section>
+
+        <!-- /Slider -->
+        <!-- flat-title -->
+        <section class="flat-spacing-9">
+            <div class="container">
+                <div class="flat-title my-0">
+                    <span class="title">{{gurukul.title | capfirst }}</span>
+                   <p class="sub-title text_black-2" style="font-size:1rem; line-height:1.5; color:#000;">
+                        {% if gurukul and gurukul.description %}
+                            {{ gurukul.description | capfirst |linebreaksbr }}
+                        {% endif %}
+                    </p>
+
+                </div>
+            </div>
+        </section>
+        <!-- /flat-title -->
+        <div class="container"><div class="line"></div></div>
+        <!-- image-text -->
+        <section class="flat-spacing-23 flat-image-text-section">
+            <div class="container">
+                <div class="tf-grid-layout md-col-2 tf-img-with-text style-4">
+                    <div class="tf-image-wrap">
+                        <img class="lazyload w-100" data-src="{{ established.image.url }}" src="{{ established.image.url }}" alt="collection-img">
+                    </div>
+                    <div class="tf-content-wrap px-0 d-flex justify-content-center w-100">
+                        <div>
+                            <div class="heading">{{ established.title | capfirst }}</div>
+                            <div class="text">
+                                {% if established and established.description %}
+                                    {{ established.description | capfirst |linebreaksbr }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+       <section class="flat-spacing-15">
+    <div class="container">
+        <div class="tf-grid-layout md-col-2 tf-img-with-text style-4">
+            
+            <!-- Mission Text -->
+            <div class="tf-content-wrap px-0 d-flex justify-content-center w-100">
+                <div>
+                    <div class="heading">Our Mission</div>
+                    <div class="text" style="line-height:1.5;">
+                        {% if mission and mission.mission %}
+                            {{ mission.mission|linebreaksbr }}
+                        {% else %}
+                            Our mission at Gurukul IT Plaza is to empower students with modern IT skills and practical knowledge. 
+                            <br class="d-xl-block d-none">
+                            We focus on hands-on learning in computer labs, hardware & IT support labs, and software development training.
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mission Images -->
+            <div class="grid-img-group">
+                <div class="tf-image-wrap box-img item-1">
+                    <div class="img-style">
+                        {% if mission and mission.image %}
+                            <img class="lazyload" src="{{ mission.image.url }}" data-src="{{ mission.image.url }}" alt="Mission Image">
+                        {% else %}
+                            <img class="lazyload" src="{% static 'images/collections/collection-71.jpg' %}" data-src="{% static 'images/collections/collection-71.jpg' %}" alt="Mission Image">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="tf-image-wrap box-img item-2">
+                    <div class="img-style">
+                        <img class="lazyload" src="{{ mission.image.url }}" data-src="{{ mission.image.url }}" alt="Mission Image">
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+<!-- /image-text -->
+
+<section>
+    <div class="container">
+        <div class="bg_grey-2 radius-10 flat-wrap-iconbox">
+            
+            <!-- Section Title -->
+            <div class="flat-title lg">
+                <span class="title fw-5">Quality & Excellence in IT Education</span>
+                <div>
+                    <p class="sub-title text_black-2">Our state-of-the-art computer labs are equipped with modern PCs and peripherals.</p> 
+                    <p class="sub-title text_black-2">We provide practical hands-on training in hardware, software, and IT support to prepare students for real-world challenges.</p>
+                </div>
+            </div>
+
+            <!-- Icon Boxes -->
+            <div class="flat-iconbox-v3 lg">
+                <div class="wrap-carousel wrap-mobile">
+                    <div class="swiper tf-sw-mobile" data-preview="1" data-space="15">
+                        <div class="swiper-wrapper wrap-iconbox lg">
+                            
+                            <!-- High-Quality Computers -->
+                            <div class="swiper-slide">
+                                <div class="tf-icon-box text-center">
+                                    <div class="icon">
+                                        <i class="icon-materials"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="title">High-Quality Computers</div>
+                                        <p class="text_black-2">Our labs are equipped with high-performance PCs and peripherals to provide smooth and efficient learning experiences.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Practical Hardware Training -->
+                            <div class="swiper-slide">
+                                <div class="tf-icon-box text-center">
+                                    <div class="icon">
+                                        <i class="icon-design"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="title">Hands-On Hardware Training</div>
+                                        <p class="text_black-2">Students gain practical skills in computer assembly, repair, and peripheral device setup to handle real IT environments.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Software Development & IT Skills -->
+                            <div class="swiper-slide">
+                                <div class="tf-icon-box text-center">
+                                    <div class="icon">
+                                        <i class="icon-sizes"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="title">Software & IT Skills</div>
+                                        <p class="text_black-2">We teach software development, programming, and IT support skills, ensuring students are industry-ready.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="sw-dots style-2 sw-pagination-mb justify-content-center"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- /image-text -->
+
+       <section class="flat-spacing-14">
+            <div class="container">
+                <div class="flat-title wow fadeInUp" data-wow-delay="0s">
+                    <span class="title fw-6">Gallery</span>
+                </div>
+                <div class="hover-sw-nav hover-sw-4 view-default">
+                    <div class="swiper tf-sw-recent" data-preview="3" data-tablet="3" data-mobile="1" data-space-lg="30" data-space-md="30" data-space="15" data-pagination="1" data-pagination-md="1" data-pagination-lg="1">
+                        <div class="swiper-wrapper">
+                            {% for blog in blogs %}
+                            <div class="swiper-slide" lazy="true">
+                                <div class="blog-article-item wow fadeInUp" data-wow-delay="0s">
+                                    <div class="article-thumb rounded-0">
+                                        <a href="{% url "blog_detail" blog.pk %}">
+                                            <img class="lazyload" data-src="{{blog.thumbnail.url}}" src="{{blog.thumbnail.url}}" alt="img-blog">
+                                        </a>
+                                        <div class="article-label">
+                                            <a href="{% url "blog_detail" blog.pk %}" class="animate-hover-btn btn-icon btn-sm radius-3 tf-btn text-capitalize">GITP</a>
+                                        </div>
+                                    </div>
+                                    <div class="article-content">
+                                        <div class="article-title">
+                                            <a href="{% url "blog_detail" blog.pk %}" class="">{{blog.title | capfirst }}</a>
+                                        </div>
+                                        <div class="article-btn">
+                                            <a href="{% url "blog_detail" blog.pk %}" class="tf-btn btn-line fw-6">Read more<i class="icon icon-arrow1-top-left"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                    <div class="nav-sw nav-next-slider nav-next-recent box-icon w_46 round"><span class="icon icon-arrow-left"></span></div>
+                    <div class="nav-sw nav-prev-slider nav-prev-recent box-icon w_46 round"><span class="icon icon-arrow-right"></span></div>
+                    <div class="sw-dots style-2 sw-pagination-recent justify-content-center"></div>
+                </div>
+            </div>
+        </section>
+     {% endblock %}

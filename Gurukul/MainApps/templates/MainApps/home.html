@@ -1,0 +1,1406 @@
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} home {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %} 
+    <!-- Main content -->
+    {% if banners %}
+    <!-- Slider -->
+    <section class="tf-slideshow slideshow-effect slider-effect-fade style-padding position-relative">
+        <div class="swiper tf-sw-effect">
+            <div class="swiper-wrapper">
+                {% for banner in banners %}
+                <div class="swiper-slide">
+                    <div class="slider-effect wrap-slider">
+                        <div class="content-left  " style="background:#fcf8f3">
+                            <div class="container ">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="box-content">
+                                            <h2 class="heading fade-item fade-item-1">{{ banner.title|linebreaksbr }}</h2>
+                                            <p class="desc fade-item fade-item-2">Your hub for IT learning, online services, and devices</p>
+
+                                            {% if banner.link %}
+                                            <a href="{{ banner.link }}" class="fade-item fade-item-3 tf-btn btn-light-icon animate-hover-btn btn-xl radius-3">
+                                                <span>Explore more</span>
+                                                <i class="icon icon-arrow-right"></i>
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="img-slider">
+                            <img class="lazyload" data-src="{{ banner.image.url }}" src="{{ banner.image.url }}" alt="{{ banner.title }}">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="wrap-pagination">
+            <div class="container">
+                <div class="sw-dots sw-pagination-slider"></div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+
+      <!-- Marquee -->
+        <div class="tf-marquee marquee-sm bg_blue-3">
+            <div class="wrap-marquee">
+                <div class="marquee-item">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6" viewBox="0 0 7 6" fill="none">
+                            <path d="M3.5 0L6.53109 5.25H0.468911L3.5 0Z" fill="white"></path>
+                        </svg>
+                    </div>
+                    <p class="text text-white text-uppercase fw-6">PAY EASILY WITH KHALTI</p>
+                </div>
+                <div class="marquee-item">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6" viewBox="0 0 7 6" fill="none">
+                            <path d="M3.5 0L6.53109 5.25H0.468911L3.5 0Z" fill="white"></path>
+                        </svg>
+                    </div>
+                    <p class="text text-white text-uppercase fw-6">SUPPORTING eSEWA PAYMENTS</p>
+                </div>
+                <div class="marquee-item">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6" viewBox="0 0 7 6" fill="none">
+                            <path d="M3.5 0L6.53109 5.25H0.468911L3.5 0Z" fill="white"></path>
+                        </svg>
+                    </div>
+                    <p class="text text-white text-uppercase fw-6">MOBILE BANKING PAYMENT AVAILABLE</p>
+                </div>
+                <div class="marquee-item">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6" viewBox="0 0 7 6" fill="none">
+                            <path d="M3.5 0L6.53109 5.25H0.468911L3.5 0Z" fill="white"></path>
+                        </svg>
+                    </div>
+                    <p class="text text-white text-uppercase fw-6">FAST AND SECURE DIGITAL PAYMENTS</p>
+                </div>
+                <div class="marquee-item">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6" viewBox="0 0 7 6" fill="none">
+                            <path d="M3.5 0L6.53109 5.25H0.468911L3.5 0Z" fill="white"></path>
+                        </svg>
+                    </div>
+                    <p class="text text-white text-uppercase fw-6">PAY VIA KHALTI, eSEWA, OR ANY MOBILE BANKING APP</p>
+                </div>
+                <div class="marquee-item">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="6" viewBox="0 0 7 6" fill="none">
+                            <path d="M3.5 0L6.53109 5.25H0.468911L3.5 0Z" fill="white"></path>
+                        </svg>
+                    </div>
+                    <p class="text text-white text-uppercase fw-6">SAFE, QUICK, AND HASSLE-FREE PAYMENTS</p>
+                </div>
+            </div>
+        </div>
+
+        
+
+
+
+        <section class="flat-spacing-10 bg_grey-4">
+            <div class="container">
+                <div class="tf-grid-layout align-items-center flat-wrap-countdown">
+                    <div class="tf-content-wrap-v2 d-none d-sm-block">
+                        <h4 class="heading">Nepal Time Now</h4>
+                        <p class="description">Live local time displayed for Kathmandu (NST, UTC+5:45) showing date and time components.</p>
+                        <a href="#" class="tf-btn">Glad to have you here. Enjoy your next experience. <i class="icon icon-arrow1-top-lef"></i></a>
+                    </div>
+                    <div class="tf-countdown-v2">
+                        <div class="live-time-display">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+      <!-- Lookbook -->
+        <section class=" d-none d-md-block">
+            <div class="container-full">
+                <div class="wrap-lookbook lookbook-handbag position-relative">
+
+                    <!-- GIF Image centered -->
+                    <div class="image text-center ">
+                        <img class="lazyload" 
+                            data-src="{% static 'MainApps/images/gifs/location.gif' %}" 
+                            src="{% static 'MainApps/images/gifs/location.gif' %}" 
+                            alt="image-lookbook" 
+                            style="width:80%; height:auto; object-fit:contain; display:inline-block;">
+                    </div>
+
+                    <!-- Lookbook Item 1 -->
+                    <div class="lookbook-item item-1 position-absolute" style="top:20%; left:20%;">
+                        <div class="inner">
+                            <div class="btn-group dropup dropdown-center">
+                                <button class="tf-pin-btn pin-black" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span></span>
+                                </button>
+                                <ul class="dropdown-menu p-0 border-0">
+                                    <li>
+                                        <div class="lookbook-product">
+                                            <a href="{% url "new_admission_form" %}" class="image" style="background:none;">
+                                                <img class="lazyload" data-src="{% static "MainApps/images/gifs/form.gif" %}" 
+                                                    src="{% static "MainApps/images/gifs/form.gif" %}" 
+                                                    alt="Alice Mini - Dusty Rose" 
+                                                    style="width:50px; height:auto;">
+                                            </a>
+                                            <div class="content-wrap">
+                                                <div class="product-title">
+                                                    <a href="{% url "new_admission_form" %}" style="font-weight:bold;">Discover Your to Knowledge Path</a>
+                                                </div>
+                                                <div class="prie">Admissions Now Open </div>
+                                            </div>
+                                             <a href="{% url "new_admission_form" %}" 
+                                                style="padding:1.4%; display:inline-block; border:1px solid lightgrey; border-radius:50px; transition: background 0.3s;"
+                                                onmouseover="this.style.backgroundColor='#f0f0f0';"
+                                                onmouseout="this.style.backgroundColor='transparent';">
+                                                    <img class="lazyload" data-src="{% static 'MainApps/images/gifs/arrow.png' %}" 
+                                                        src="{% static 'MainApps/images/gifs/arrow.gif' %}" 
+                                                        alt="Arrow" 
+                                                        style="width:50px; height:auto;">
+                                                </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lookbook Item 2 -->
+                    <div class="lookbook-item item-2 position-absolute" style="top:43%; right:30%;">
+                        <div class="inner">
+                            <div class="btn-group dropup dropdown-center">
+                                <button class="tf-pin-btn pin-black" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span></span>
+                                </button>
+                                <ul class="dropdown-menu p-0 border-0">
+                                    <li>
+                                        <div class="lookbook-product">
+                                            <a href="{% url "courseList" %}" class="image" style="background:none;">
+                                                <img class="lazyload" data-src="{% static "MainApps/images/gifs/book.gif" %}" 
+                                                    src="{% static "MainApps/images/gifs/book.gif" %}" 
+                                                    alt="Alice Mini - Dusty Rose" 
+                                                    style="width:50px; height:auto;">
+                                            </a>
+
+                                            <div class="content-wrap">
+                                                <div class="product-title">
+                                                    <a href="{% url "courseList" %}">Dive Into the Course</a>
+                                                </div>
+                                                <div class="price">Our Courses</div>
+                                            </div>
+                                           <a href="{% url "courseList" %}" 
+                                            style="padding:1.4%; display:inline-block; border:1px solid lightgrey; border-radius:50px; transition: background 0.3s;"
+                                            onmouseover="this.style.backgroundColor='#f0f0f0';"
+                                            onmouseout="this.style.backgroundColor='transparent';">
+                                                <img class="lazyload" data-src="{% static 'MainApps/images/gifs/arrow.png' %}" 
+                                                    src="{% static 'MainApps/images/gifs/arrow.gif' %}" 
+                                                    alt="Arrow" 
+                                                    style="width:50px; height:auto;">
+                                            </a>
+
+
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <!-- Lookbook Item 3 -->
+                    <div class="lookbook-item item-3 position-absolute" style="top:65%; left:50%;">
+                        <div class="inner">
+                            <div class="btn-group dropup dropdown-center">
+                                <button class="tf-pin-btn pin-black" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span></span>
+                                </button>
+                                <ul class="dropdown-menu p-0 border-0">
+                                    <li>
+                                        <div class="lookbook-product">
+                                            <a href="{% url "check_certificate" %}" class="image" style="background:none;">
+                                                <img class="lazyload" data-src="{% static "MainApps/images/gifs/certificate_icons.gif" %}" 
+                                                    src="{% static "MainApps/images/gifs/certificate_icons.gif" %}" 
+                                                    alt="Alice Mini - Dusty Rose" 
+                                                    style="width:50px; height:auto;">
+                                            </a>
+                                            <div class="content-wrap">
+                                                <div class="product-title">
+                                                    <a href="{% url "check_certificate" %}">Access Your Completion Certificate</a>
+                                                </div>
+                                                <div class="price">Check  Certificate</div>
+                                            </div>
+                                            <a href="{% url "check_certificate" %}" 
+                                            style="padding:1.4%; display:inline-block; border:1px solid lightgrey; border-radius:50px; transition: background 0.3s;"
+                                            onmouseover="this.style.backgroundColor='#f0f0f0';"
+                                            onmouseout="this.style.backgroundColor='transparent';">
+                                                <img class="lazyload" data-src="{% static 'MainApps/images/gifs/arrow.png' %}" 
+                                                    src="{% static 'MainApps/images/gifs/arrow.gif' %}" 
+                                                    alt="Arrow" 
+                                                    style="width:50px; height:auto;">
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <!-- /Lookbook -->
+
+
+        <!-- JavaScript to auto-show dropdowns -->
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const pins = document.querySelectorAll(".lookbook-item .tf-pin-btn");
+            pins.forEach(pin => {
+                const dropdownMenu = pin.nextElementSibling;
+                if(dropdownMenu) dropdownMenu.classList.add("show");
+            });
+        });
+        </script>
+
+        <script>
+            function updateLiveClock() {
+                // Target the element with the class 'live-time-display'
+                const timeDisplays = document.querySelectorAll('.live-time-display');
+
+                timeDisplays.forEach(timeEl => {
+                    // 1. Define the labels and current Nepal Time components
+                    const labels = ["MONTH", "DAY", "YEAR", "HOUR", "MIN:SEC"];
+                    const now = new Date();
+                    
+                    // Function to get a formatted time component in Nepal Time Zone
+                    const getTimeComponent = (options) => {
+                        return now.toLocaleString('en-US', { timeZone: 'Asia/Kathmandu', ...options });
+                    };
+
+                    // 2. Extract components
+                    const month = getTimeComponent({ month: 'short' }); 
+                    const day = getTimeComponent({ day: '2-digit' }); 
+                    const year = getTimeComponent({ year: 'numeric' }); 
+                    const hour = getTimeComponent({ hour: '2-digit', hour12: false }); 
+                    const minute = getTimeComponent({ minute: '2-digit' }); 
+                    const second = getTimeComponent({ second: '2-digit' }); 
+                    
+                    // 3. Define the values for the 5 boxes
+                    const values = [
+                        month, 
+                        day, 
+                        year,
+                        hour,
+                        `${minute}:${second}` 
+                    ];
+
+                    // 4. Update or create the structure
+                    if (timeEl.children.length === 0) {
+                        // Initial creation of the 5-box structure
+                        for (let i = 0; i < 5; i++) {
+                            const item = document.createElement('div');
+                            
+                            // Month (0) and Year (2) need the 'text-box' class for adjusted font size
+                            let boxClass = 'countdown-item';
+                            if (i === 0 || i === 2) boxClass += ' text-box'; 
+                            
+                            item.className = boxClass;
+                            
+                            item.innerHTML = `<span class="countdown-number">${values[i]}</span><span class="countdown-label">${labels[i]}</span>`;
+                            timeEl.appendChild(item);
+                        }
+                    } else {
+                        // Update existing structure every second
+                        const numberSpans = timeEl.querySelectorAll('.countdown-number');
+                        
+                        numberSpans[0].textContent = values[0]; // Month
+                        numberSpans[1].textContent = values[1]; // Day
+                        numberSpans[2].textContent = values[2]; // Year
+                        numberSpans[3].textContent = values[3]; // Hour
+                        numberSpans[4].textContent = values[4]; // Min:Sec
+                    }
+                });
+            }
+
+            // Run the function once immediately and then set the interval for real-time updates
+            updateLiveClock();
+            // Update every 1000 milliseconds (1 second)
+            const interval = setInterval(updateLiveClock, 1000); 
+        </script>
+        
+         <!-- Price -->
+        <section >
+            <div class="container-full">
+              
+                    <div class="flat-title">
+                        <span class="title fw-6 wow fadeInUp " style="color:rgba(0, 0, 0, 0.45);" data-wow-delay="0s">  courses</span>
+                    </div>
+                    <div class="container">
+                        <div class="wrap-carousel wrap-sw-2">
+                            <div class="swiper tf-sw-product-sell wrap-sw-over" data-preview="4" data-tablet="3" data-mobile="2" data-space-lg="30" data-space-md="15" data-pagination="2" data-pagination-md="3" data-pagination-lg="3">
+                                <div class="swiper-wrapper">
+                                    {% for courses in course %}
+                                    <div class="swiper-slide" lazy="true">
+                                        <div class="card-product bg_white radius-20">
+                                            <div class="card-product-wrapper">
+                                                <a href="{% url 'Pc_ProductView' courses.id %}" class="product-img">
+                                                    {% if courses.images.first %}
+                                                        <img class="lazyload img-product"
+                                                            src="{{ courses.images.first.image.url }}"
+                                                            alt="{{ courses.name }}">
+                                                        <img class="lazyload img-hover"
+                                                            src="{{ courses.images.first.image.url }}"
+                                                            alt="{{ courses.name }}">
+                                                    {% else %}
+                                                        <img src="{% static 'default.jpg' %}" alt="No image">
+                                                    {% endif %}
+                                                </a>
+                                                <div class="list-product-btn">
+                                                    
+                                                    <a href="{% url 'add_pc_to_cart' courses.id %}" 
+                                                        class="box-icon bg_white wishlist btn-icon-action" 
+                                                        data-course-id="{{ courses.id }}">
+                                                        <span class="icon icon-bag"></span>
+                                                        <span class="tooltip">Quick Add</span>
+                                                        <span class="icon icon-check"></span>
+                                                    </a>
+                                                   
+                                                    
+                                                </div>
+                                                <div class="on-sale-wrap text-end">
+                                                    <div class="on-sale-item">Enroll Now</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-product-info has-padding">
+                                                <hr>
+                                                <a href="{% url "Pc_ProductView" courses.id %}" class="title link" style="font-weight:bold;">{{courses.name | capfirst }}</a>
+                                                <span class="price"> <span style="color:rgba(0, 0, 0, 0.874);">Rs {{courses.discount_price  }}</span>&nbsp;&nbsp;&nbsp;<span class="fw-4 text-sale">Rs {{courses.real_price  }}</span></span>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="nav-sw nav-next-slider nav-next-product box-icon w_46 round"><span class="icon icon-arrow-left"></span></div>
+                            <div class="nav-sw nav-prev-slider nav-prev-product box-icon w_46 round"><span class="icon icon-arrow-right"></span></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="flat-title wow fadeInUp" data-wow-delay="0s" style="margin-top:50px;">
+                    <div class="d-flex gap-16 align-items-center">
+                        <div class="nav-sw-arrow nav-next-slider nav-next-product"><span class="icon icon-arrow1-left"></span></div>
+                        <a href="{% url 'courseList' %}" class="tf-btn btn-line fs-12 fw-6">VIEW ALL</a>
+                        <div class="nav-sw-arrow nav-prev-slider nav-prev-product"><span class="icon icon-arrow1-right"></span></div>
+                    </div>   
+                </div>
+        </section>
+           <!-- Categories -->
+      
+                <!-- iconbox -->
+        <section class="flat-spacing-27">
+            <div class="container">
+                <div class="flat-iconbox-v3">
+                    <div class="wrap-carousel wrap-mobile">
+                        <div class="swiper tf-sw-mobile" data-preview="1" data-space="15">
+                            <div class="swiper-wrapper wrap-iconbox">
+
+                                <!-- Icon Box 1: Affordability -->
+                                <div class="swiper-slide">
+                                    <div class="tf-icon-box small text-center">
+                                        <div class="icon w-40 no-border">
+                                            <img src="{% static 'MainApps/images/gifs/pay_icons.gif' %}" alt="Certificate" style="width:100%; height:auto;">
+                                        </div>
+                                        <div class="content">
+                                            <div class="title">Affordability</div>
+                                            <p>We bring the right people together to provide cost-effective learning solutions.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Icon Box 2: Multitasking -->
+                                <div class="swiper-slide">
+                                    <div class="tf-icon-box small text-center">
+                                        <div class="icon w-40 no-border">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#1f1f1fff" viewBox="0 0 24 24">
+                                                <path d="M4 6h16v2H4zm0 4h16v2H4zm0 4h16v2H4z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="content">
+                                            <div class="title">Multitasking</div>
+                                            <p>We bring the right people together to enhance your multitasking skills.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Icon Box 3: Academic Excellence -->
+                                <div class="swiper-slide">
+                                    <div class="tf-icon-box small text-center">
+                                        <div class="icon w-40 no-border">
+                                            <img src="{% static 'MainApps/images/gifs/academic_icons.gif' %}" alt="Certificate" style="width:100%; height:auto;">
+                                        </div>
+                                        <div class="content">
+                                            <div class="title">Academic Excellence</div>
+                                            <p>We provide structured and effective learning for your success.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Icon Box 4: Certification -->
+                                <div class="swiper-slide">
+                                    <div class="tf-icon-box small text-center">
+                                        <div class="icon w-40 no-border">
+                                            <img src="{% static 'MainApps/images/gifs/certificate_icons.gif' %}" alt="Certificate" style="width:100%; height:auto;">
+                                        </div>
+                                        <div class="content">
+                                            <div class="title">Certification</div>
+                                            <p>Grab your course certificates and showcase your achievements.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Icon Box 5: Qualified Trainers -->
+                                <div class="swiper-slide">
+                                    <div class="tf-icon-box small text-center">
+                                        <div class="icon w-40 no-border">
+                                            <img src="{% static 'MainApps/images/gifs/teacher_icons.gif' %}" alt="Certificate" style="width:100%; height:auto;">
+                                        </div>
+                                        <div class="content">
+                                            <div class="title">Qualified Trainers</div>
+                                            <p>Learn from experienced IT professionals and certified trainers.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Icon Box 6: Online IT Training -->
+                                <div class="swiper-slide">
+                                    <div class="tf-icon-box small text-center">
+                                        <div class="icon w-40 no-border">
+                                            <img src="{% static 'MainApps/images/gifs/online_icons.gif' %}" alt="Certificate" style="width:100%; height:auto;">
+                                        </div>
+                                        <div class="content">
+                                            <div class="title">Online IT Training</div>
+                                            <p>Access our IT courses online anytime, anywhere for flexible learning.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="sw-dots style-2 sw-pagination-mb justify-content-center"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /iconbox -->
+
+
+        
+        <!-- /Shop Collection -->
+        <!-- /Best seller -->
+        <section class="flat-price" style="margin-top:50px;margin-bottom:50px;">
+            <div class="container">
+                <div class="wrap-carousel wrap-mobile">
+                    <div class="swiper tf-sw-mobile-1" data-preview="1" data-space="15">
+                        <div class="swiper-wrapper wrap-price">
+                            {% for best in best %}
+                            <div class="swiper-slide">
+                                <div class="card-product style-price bg_black radius-20">
+                                    <div class="card-product-wrapper">
+                                        <a href="{% url "Pc_ProductView" best.id %}" class="product-img">
+                                            {% if best.images.first %}
+                                                <img class="lazyload img-product"
+                                                    src="{{ best.images.first.image.url }}"
+                                                    alt="{{ best.name }}">
+                                                <img class="lazyload img-hover"
+                                                    src="{{ best.images.first.image.url }}"
+                                                    alt="{{ best.name }}">
+                                            {% else %}
+                                                <img src="{% static 'default.jpg' %}" alt="No image">
+                                            {% endif %}
+                                        </a>
+                                        <div class="list-product-btn style-black">
+                                           
+                                            <a href="{% url 'add_pc_to_cart' best.id %}" 
+                                                class="box-icon bg_white wishlist btn-icon-action" 
+                                                data-course-id="{{ best.id }}">
+                                                <span class="icon icon-bag"></span>
+                                                <span class="tooltip">Quick Add</span>
+                                                <span class="icon icon-check"></span>
+                                            </a>
+                                           
+                                        </div>
+                                        <div class="on-sale-wrap text-end">
+                                            <div class="on-sale-item new">New !</div>
+                                        </div>
+                                    </div>
+                                    <div class="card-product-info">
+                                        <a href="shop-collection-list.html" class="vendor fw-7 link">{{best.device_type | capfirst }}</a>
+                                        <a href="{% url "Pc_ProductView" best.id %}" class="title fw-7 link">{{best.name | capfirst }}</a>
+                                        
+                                        <div class="price" style="display: flex; align-items: center; gap: 8px;">
+                                            <span style="font-weight: bold;">Rs {{ best.discount_price }}</span>
+                                            <span style="text-decoration: line-through; color: #888;">Rs {{ best.real_price }}</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="tf-price-table-contents">
+                                        <ul>
+                                           
+                                            <li class="fw-5 fs-16">
+                                                <i class="icon icon-check"></i>Customer Selection {{best.sold}}
+                                            </li>
+                                            <li class="fw-5 fs-16">
+                                                <i class="icon icon-check"></i>In our Stock {{best.stock}}
+                                            </li>
+                                            <li class="fw-5 fs-16">
+                                                <i class="icon icon-check"></i> Best Performance
+                                            </li>
+                                            <li class="fw-5 fs-16">
+                                                <i class="icon icon-check"></i>Brand : {{ best.brand }}
+                                            </li>
+                                            <li class="fw-5 fs-16">
+                                                <i class="icon icon-check"></i>Warranty : {{ best.warranty_period|format_duration }}
+                                            </li>
+                                        </ul>
+                                        <div class="tf-price-table-btn text-center">
+                                            <a href="{% url "Pc_ProductView" best.id %}" class="tf-btn btn-md rounded-full btn-fill btn-icon animate-hover-btn">
+                                                View details
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                           {% endfor %}
+                        </div>
+                    </div>
+                    <div class="sw-dots style-2 sw-pagination-mb-1 justify-content-center"></div>
+                </div>
+            </div>
+        </section>
+        <!-- /Price -->
+        <!-- Shop Collection -->
+       
+        <!-- Best seller -->
+        <section class="flat-spacing-2 pt_0">
+            <div class="container">
+                <div class="flat-title flex-row justify-content-between px-0">
+                    <span class="title wow fadeInUp" data-wow-delay="0s">New Arrivals</span>
+                    <div class="box-sw-navigation">
+                        <div class="nav-sw square nav-next-slider nav-next-product"><span class="icon icon-arrow1-left"></span></div>
+                        <div class="nav-sw square nav-prev-slider nav-prev-product"><span class="icon icon-arrow1-right"></span></div>
+                    </div>
+                </div>
+                <div class="hover-sw-nav hover-sw-2">
+                    <div class="swiper tf-sw-product-sell wrap-sw-over" data-preview="4" data-tablet="3" data-mobile="2" data-space-lg="30" data-space-md="15" data-pagination="2" data-pagination-md="3" data-pagination-lg="3">
+                        <div class="swiper-wrapper">
+                            {% for peripheral in pc_peripherals %}
+                            <div class="swiper-slide " lazy="true">
+                                <div class="card-product style-2 bg_black-">
+                                    <div class="card-product-wrapper">
+                                         <a href="{% url "Pc_ProductView" peripheral.id %}" class="product-img">
+                                                {% if peripheral.images.first %}
+                                                    <img class="lazyload img-product"
+                                                        src="{{ peripheral.images.first.image.url }}"
+                                                        alt="{{ peripheral.name }}">
+                                                    <img class="lazyload img-hover"
+                                                        src="{{ peripheral.images.first.image.url }}"
+                                                        alt="{{ peripheral.name }}">
+                                                {% else %}
+                                                    <img src="{% static 'default.jpg' %}" alt="No image">
+                                                {% endif %}
+                                        </a>
+                                       
+                                        <div class="list-product-btn absolute-3">
+                                           <a href="{% url 'add_pc_to_cart' peripheral.id %}" 
+                                                class="box-icon bg_white wishlist btn-icon-action" 
+                                                data-course-id="{{ peripheral.id }}">
+                                                <span class="icon icon-bag"></span>
+                                                <span class="tooltip">Quick Add</span>
+                                                <span class="icon icon-check"></span>
+                                            </a>
+                                          
+                                        </div>
+                                       <div class="size-list style-2" style="display: flex; gap: 10px;">
+                                            <span style="display: inline-block; padding: 3px 10px; border-radius: 20px; background-color: #eee;">
+                                                <i class="fas fa-clock" style="color:rgba(0, 0, 0, 0.806);"></i> {{ peripheral.created_at | time_since_simple }}
+                                            </span>
+                                            <span style="display: inline-block; padding: 3px 10px; border-radius: 20px; background-color: #eee;">
+                                                <i class="fas fa-check-circle" style="color:rgba(0, 0, 0, 0.806);"></i> {{ peripheral.stock | humanize_number }} 
+                                            </span>
+                                            <span style="display: inline-block; padding: 3px 10px; border-radius: 20px; background-color: #eee;">
+                                                <i class="fas fa-cart-arrow-down" style="color:rgba(0, 0, 0, 0.806);"></i> {{ peripheral.sold | humanize_number | default:"0" }} 
+                                            </span>
+                                            <span style="display: inline-block; padding: 3px 10px; border-radius: 20px; background-color: #eee;">
+                                                <i class="fas fa-eye" style="color:rgba(0, 0, 0, 0.806);"></i> {{ peripheral.views | humanize_number }}
+                                            </span>
+                                        </div>
+
+
+
+                                        
+                                        {% comment %} <div class="countdown-box">
+                                            <div class="js-countdown" data-timer="1007500" data-labels="d :,h :,m :,s"></div>
+                                        </div> {% endcomment %}
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                            {% endfor %}
+                          
+                        </div>
+                    </div>
+                    <div class="nav-sw nav-next-slider nav-next-product box-icon w_46 round"><span class="icon icon-arrow-left"></span></div>
+                    <div class="nav-sw nav-prev-slider nav-prev-product box-icon w_46 round"><span class="icon icon-arrow-right"></span></div>
+                </div>
+            </div>
+            <div class="flat-title wow fadeInUp" data-wow-delay="0s" style="margin-top:50px;">
+                    <div class="d-flex gap-16 align-items-center">
+                        <div class="nav-sw-arrow nav-next-slider nav-next-product"><span class="icon icon-arrow1-left"></span></div>
+                        <a href="{% url 'productList' %}" class="tf-btn btn-line fs-12 fw-6">VIEW ALL</a>
+                        <div class="nav-sw-arrow nav-prev-slider nav-prev-product"><span class="icon icon-arrow1-right"></span></div>
+                    </div>   
+                </div>
+        </section>
+        <section>
+            <div class="container-full">
+                <div class="bg_grey-5 radius-60 flat-spacing-21">
+                    <div class="flat-title">
+                        <span class="title fw-6 wow fadeInUp" data-wow-delay="0s">Our best sellers</span>
+                    </div>
+                    <div class="container">
+                        <div class="wrap-carousel wrap-sw-2">
+                            <div class="swiper tf-sw-product-sell wrap-sw-over" data-preview="4" data-tablet="3" data-mobile="2" data-space-lg="30" data-space-md="15" data-pagination="2" data-pagination-md="3" data-pagination-lg="3">
+                                <div class="swiper-wrapper">
+                                    {% for best_sell in best_sellers %}
+                                    <div class="swiper-slide" lazy="true">
+                                        <div class="card-product bg_white radius-20">
+                                            <div class="card-product-wrapper">
+                                                <a href="{% url "Pc_ProductView" best_sell.id %}" class="product-img">
+                                                    {% if best_sell.images.first %}
+                                                        <img class="lazyload img-product"
+                                                            src="{{ best_sell.images.first.image.url }}"
+                                                            alt="{{ best_sell.name }}">
+                                                        <img class="lazyload img-hover"
+                                                            src="{{ best_sell.images.first.image.url }}"
+                                                            alt="{{ best_sell.name }}">
+                                                    {% else %}
+                                                        <img src="{% static 'default.jpg' %}" alt="No image">
+                                                    {% endif %}
+                                                </a>
+                                                <div class="list-product-btn">
+                                                    <a href="{% url 'add_pc_to_cart' best_sell.id %}" 
+                                                        class="box-icon bg_white wishlist btn-icon-action" 
+                                                        data-course-id="{{ best_sell.id }}">
+                                                        <span class="icon icon-bag"></span>
+                                                        <span class="tooltip">Quick Add</span>
+                                                        <span class="icon icon-check"></span>
+                                                    </a>
+                                                </div>
+                                                <div class="on-sale-wrap text-end">
+                                                    <div class="on-sale-item">Sale</div>
+                                                </div>
+                                            </div>
+                                            <div class="card-product-info has-padding">
+                                                <a href="{% url 'Pc_ProductView' best_sell.id %}" class="title link">{{best_sell.name | capfirst | truncatechars:25 }}</a>
+                                                <span class="price"><span class="">Rs {{best_sell.discount_price}}</span> &nbsp;&nbsp; <span class="fw-4 text-sale">Rs {{best_sell.real_price}}</span> </span>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="nav-sw nav-next-slider nav-next-product box-icon w_46 round"><span class="icon icon-arrow-left"></span></div>
+                            <div class="nav-sw nav-prev-slider nav-prev-product box-icon w_46 round"><span class="icon icon-arrow-right"></span></div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /Best seller -->
+        
+     
+     
+
+           <!-- choose us -->
+        <section class="flat-spacing-23 bg_brown-4">
+            <div class="container-full">
+                <div class="flat-title wow fadeInUp" data-wow-delay="0s">
+                    <span class="title fw-8 font-poppins fs-28">Voices of Our Users</span>
+                    <p class="sub-title font-poppins fs-14 text_black-2">
+                        See how Gurukul’s courses and devices help learners gain skills and achieve their goals.
+                    </p>
+
+
+                </div>
+                <div class="container">
+                    <div class="wrap-carousel">
+                        <div class="swiper tf-sw-testimonial mb_60" data-preview="4" data-tablet="2" data-mobile="1" data-space-lg="30" data-space-md="15">
+                            <div class="swiper-wrapper">
+                            {% for feedback in feedbacks %}
+                            <div class="swiper-slide height-auto">
+                                <div class="testimonial-item h-100 font-poppins style-box wow fadeInUp" data-wow-delay="0s">
+                                    
+                                    <!-- Author Profile & Verified -->
+                                    <div class="author" style="display: flex; align-items: center; gap: 8px;">
+                                        <!-- User Profile Image -->
+                                        {% if feedback.profile_image %}
+                                            <img src="{{ feedback.profile_image.url }}" alt="User Profile" 
+                                                style="width:35px; height:35px; border-radius:50%; border:1px solid grey; padding:1.5px; object-fit:cover;">
+                                        {% else %}
+                                            <div style="width:35px; height:35px; border-radius:50%; border:1px solid grey; padding:1.5px; display:flex; align-items:center; justify-content:center; background-color:#f0f0f0;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-fill-check" viewBox="0 0 16 16">
+                                                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                                    <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+                                                </svg>
+                                            </div>
+                                        {% endif %}
+
+
+                                       <div class="metas">
+                                            <i class="icon-check"></i> Verified
+                                            {% if feedback.source == "institute" %}
+                                                Student
+                                            {% elif feedback.source == "shop" %}
+                                                Customer
+                                            {% else %}
+                                                Both
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Rating (black stars, max 5) -->
+                                     <div class="name">{{ feedback.name | capfirst }}</div>
+                                    <div class="rating color-black" style="margin-top:5px;font-size:20px;">
+                                        {% for i in "12345"|make_list %}
+                                            {% if forloop.counter <= feedback.rating %}
+                                                <span style="color:black;">&#9733;</span>
+                                            {% else %}
+                                                <span style="color:#ccc;">&#9733;</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- Heading (based on source) -->
+                                    <div class="heading" style="margin-top:5px;">
+                                        {% if feedback.source == "institute" %}
+                                            What Our Students Say
+                                        {% elif feedback.source == "shop" %}
+                                            Feedback from Buyers
+                                        {% elif feedback.source == "both" %}
+                                            Experiences & Feedback
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- Comment/Text -->
+                                    <div class="text" style="margin-top:5px;">
+
+                                        {{ feedback.comments|safe }}
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% endfor %}
+
+
+                                
+                                
+                            </div>
+                        </div>
+                        <div class="sw-dots medium  d-flex style-2 sw-pagination-testimonial justify-content-center"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+         <section class="flat-spacing-11">
+            <div class="container">
+                <div class="tf-accordion-wrap d-flex justify-content-between">
+                   <div class="content">
+                    {% if feedbacks %}
+                        {% for choices in feedbacks|slice:":3" %}
+                            <div class="flat-accordion style-default has-btns-arrow mb_20">
+                                <div class="flat-toggle active">
+                                    <div class="toggle-title active">
+                                        {% if choices.source == "institute" %}
+                                            <h5><strong>What Our Students Say</strong></h5>
+                                        {% elif choices.source == "shop" %}
+                                            <h5><strong>Feedback from Buyers</strong></h5>
+                                        {% elif choices.source == "both" %}
+                                            <h5><strong>Experiences & Feedback</strong></h5>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="toggle-content" style="display: flex; align-items: flex-start; gap: 15px; margin-top: 10px;">
+                                        <!-- Profile Image -->
+                                        {% if choices.profile_image %}
+                                            <img src="{{ choices.profile_image.url }}" alt="{{ choices.name }}" 
+                                                style="width:40px; height:auto; border-radius:50%; object-fit:cover;">
+                                        {% else %}
+                                            <div style="width:40px; height:40px; border-radius:50%; padding:5px;border:1px solid grey; display:flex; align-items:center; justify-content:center; background-color:#f0f0f0;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                                </svg>
+                                            </div>
+                                        {% endif %}
+
+                                        <div>
+                                            <!-- Name -->
+                                            <strong>{{ choices.name|default:user.username|capfirst }}</strong>
+
+                                            <!-- Rating (max 5 stars, black) -->
+                                            <div style="margin-top:5px;">
+                                                {% for i in "12345"|make_list %}
+                                                    {% if forloop.counter <= choices.rating %}
+                                                        <span style="color:black;">&#9733;</span>
+                                                    {% else %}
+                                                        <span style="color:#ccc;">&#9733;</span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+
+                                            <!-- Comment -->
+                                            <p style="margin-top:5px;">{{ choices.comments | safe }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No feedback available at the moment. Be the first to share your experience!</p>
+                    {% endif %}
+                </div>
+
+
+
+                   
+
+                   <div class="box tf-other-content radius-5 bg_grey-8">
+                        <h6 class="mb_20"><strong>Give Us Your Valuable Feedback!</strong></h6>
+
+                       {% if user.is_authenticated %}
+                            <div class="user-info mb_20" style="display:flex; align-items:center; gap:10px;">
+                                <!-- Profile Picture or Icon -->
+                                {% if user.profile.pr_pic %}
+                                    <img src="{{ user.profile.pr_pic.url }}" alt="Profile Picture" 
+                                        style="width:50px; height:50px; border-radius:50%; border:1px solid grey; padding:1%; object-fit:cover;">
+                                {% else %}
+                                    <div style="width:40x; height:auto; border-radius:50%; border:1px solid grey; display:flex; align-items:center; justify-content:center; background-color:#f0f0f0; padding:5px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                        </svg>
+                                    </div>
+                                {% endif %}
+
+                                <!-- User Name -->
+                                <span style="font-weight:600;">
+                                    {{ user.profile.full_name | capfirst |default:user.username | capfirst }}
+                                </span>
+                            </div>
+                        {% endif %}
+
+                    
+
+
+                        <form id="form-rate-work" action="{% url 'feedback' %}" method="POST">
+                            {% csrf_token %}
+
+                            <!-- Star Rating -->
+                            <div class="tf-field style-1 mb_15">
+                                <div class="star-rating" id="starRating">
+                                    <span class="star" data-value="1">★</span>
+                                    <span class="star" data-value="2">★</span>
+                                    <span class="star" data-value="3">★</span>
+                                    <span class="star" data-value="4">★</span>
+                                    <span class="star" data-value="5">★</span>
+                                </div>
+                                <label class="tf-field-label fw-4 text_black-2 mb_5" style="margin-left:150px;">Rating</label>
+                                <input type="hidden" name="rating" id="ratingValue" required>
+                            </div>
+
+                            <!-- Comments -->
+                            <div class="tf-field style-1 mb_15">
+                               <textarea 
+                                    class="tf-field-input tf-input" 
+                                    placeholder="Write your feedback..." 
+                                    id="comments" 
+                                    name="comments" 
+                                    rows="15" 
+                                    maxlength="500" 
+                                    required
+                                ></textarea>
+                                <small id="char-count" style="display:block; margin-top:5px;">0 / 200 characters</small>
+
+                                <script>
+                                    const textarea = document.getElementById('comments');
+                                    const charCountDisplay = document.getElementById('char-count');
+                                    const maxChars = 100;
+
+                                    textarea.addEventListener('input', function() {
+                                        const currentLength = this.value.length;
+                                        charCountDisplay.textContent = `${currentLength} / ${maxChars} characters`;
+                                    });
+                                </script>
+
+                                <label class="tf-field-label fw-4 text_black-2" for="comments">Comments</label>
+                            </div>
+                            <fieldset class="box fieldset w-100 mb-3">
+                                
+                                <select class="tf-select w-100" id="source" name="shop_institute" required>
+                                    <option value="" disabled selected>Select an Institute & Shop</option>
+                                    {% for value, label in s_i %}
+                                        <option value="{{ value }}" {% if value == source %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </fieldset>
+
+
+
+                            <!-- Submit button -->
+                            <div class="d-flex gap-20 align-items-center">
+                                <button type="submit" class="tf-btn radius-3 btn-fill animate-hover-btn justify-content-center">
+                                    Submit Feedback
+                                </button>
+                                <a href="{% url 'contact' %}" class="tf-btn btn-line">
+                                    Contact Us<i class="icon icon-arrow1-top-left"></i>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Star Rating CSS & JS -->
+                    <style>
+                    .star-rating {
+                        display: flex;
+                        gap: 5px;
+                    }
+                    .star {
+                        font-size: 30px;
+                        color: #ccc; 
+                        cursor: pointer;
+                        transition: color 0.2s;
+                        user-select: none;
+                    }
+                    .star.selected,
+                    .star.hover {
+                        color: #000; 
+                    }
+                    #comments { min-height: 70px; }
+                    </style>
+
+                    <script>
+                    const stars = document.querySelectorAll('#starRating .star');
+                    const ratingInput = document.getElementById('ratingValue');
+
+                    stars.forEach((star, index) => {
+                        star.addEventListener('click', () => {
+                            ratingInput.value = star.getAttribute('data-value');
+                            stars.forEach(s => s.classList.remove('selected'));
+                            for (let i = 0; i <= index; i++) stars[i].classList.add('selected');
+                        });
+                        star.addEventListener('mouseover', () => {
+                            stars.forEach((s, i) => i <= index ? s.classList.add('hover') : s.classList.remove('hover'));
+                        });
+                        star.addEventListener('mouseout', () => stars.forEach(s => s.classList.remove('hover')));
+                    });
+                    </script>
+
+
+                </div>
+            </div>
+        </section>
+
+
+
+        
+        <!-- Store -->
+        <section class="flat-spacing-9 pb_0">
+            <div class="container">
+                <div class="flat-title wow fadeInUp" data-wow-delay="0s">
+                    <span class="title">Visit Our Teams</span>
+                </div>
+                <div class="flat-tab-store flat-animate-tab">
+                    <ul class="widget-tab-2" role="tablist">
+                        <li class="nav-tab-item" role="presentation">   
+                            <a href="#hongkong" class="active" data-bs-toggle="tab">IT Support</a>
+                        </li>
+                        <li class="nav-tab-item" role="presentation">
+                            <a href="#london"  data-bs-toggle="tab">Trainer</a>
+                        </li>
+                        <li class="nav-tab-item" role="presentation">
+                            <a href="#paris" data-bs-toggle="tab">Developer</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active show" id="hongkong" role="tabpanel">
+                            <div class="widget-card-store align-items-center tf-grid-layout md-col-2">
+                                <div class="store-item-info">
+                                    <h5 class="store-heading">{{technician.first_name}} {{technician.last_name}}</h5>
+                                     <div class="description">
+                                       {% if technician %}
+                                        <!-- About -->
+                                        <p>{{ technician.about | safe }}</p>
+
+                                        <!-- Working Hours -->
+                                        <p>
+                                            Mon - Fri: 8:30am - 10:30pm<br>
+                                            Saturday: 8:30am - 10:30pm<br>
+                                            Sunday: Closed
+                                        </p><br>
+
+                                        <!-- Email & Phone -->
+                                        <p>
+                                            {% if technician.email %}
+                                                <i class="fas fa-envelope" style="padding-right:10px;"></i>
+                                                <a href="mailto:{{ technician.email }}">{{ technician.email }}</a>
+                                            {% endif %}
+                                        </p>
+                                        <p>
+                                            {% if technician.phone %}
+                                                <i class="fas fa-phone" style="padding-right:10px;"></i>
+                                                <a href="tel:{{ technician.phone }}">{{ technician.phone }}</a>
+                                            {% endif %}
+                                        </p>
+
+                                        <!-- Social Media Links -->
+                                        <div class="social-links">
+                                            {% if technician.facebook %}
+                                                <a href="{{ technician.facebook }}" target="_blank">
+                                                    <i class="fab fa-facebook" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if technician.linkedin %}
+                                                <a href="{{ technician.linkedin }}" target="_blank">
+                                                    <i class="fab fa-linkedin" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if technician.twitter %}
+                                                <a href="{{ technician.twitter }}" target="_blank">
+                                                    <i class="fab fa-twitter" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if technician.github %}
+                                                <a href="{{ technician.github }}" target="_blank">
+                                                    <i class="fab fa-github" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <p>No developer information available.</p>
+                                    {% endif %}
+                                    </div>
+                                </div>
+                                <div class="store-img">
+                                    <img class="lazyload" data-src="{{technician.profile_image.url}}" src="{{technician.profile_image.url}}" alt="store-img">                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="london" role="tabpanel">
+                            <div class="widget-card-store align-items-center tf-grid-layout md-col-2">
+                                <div class="store-item-info">
+                                     <h5 class="store-heading">{{trainer.first_name  | capfirst }} {{trainer.last_name }}</h5>
+                                    <div class="description">
+                                       {% if trainer %}
+                                        <!-- About -->
+                                        <p>{{ trainer.about | safe }}</p>
+
+                                        <!-- Working Hours -->
+                                        <p>
+                                            Mon - Fri: 8:30am - 10:30pm<br>
+                                            Saturday: 8:30am - 10:30pm<br>
+                                            Sunday: Closed
+                                        </p><br>
+
+                                        <!-- Email & Phone -->
+                                        <p>
+                                            {% if trainer.email %}
+                                                <i class="fas fa-envelope" style="padding-right:10px;"></i>
+                                                <a href="mailto:{{ trainer.email }}">{{ trainer.email }}</a>
+                                            {% endif %}
+                                        </p>
+                                        <p>
+                                            {% if trainer.phone %}
+                                                <i class="fas fa-phone" style="padding-right:10px;"></i>
+                                                <a href="tel:{{ trainer.phone }}">{{ trainer.phone }}</a>
+                                            {% endif %}
+                                        </p>
+
+                                        <!-- Social Media Links -->
+                                        <div class="social-links">
+                                            {% if trainer.facebook %}
+                                                <a href="{{ trainer.facebook }}" target="_blank">
+                                                    <i class="fab fa-facebook" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if trainer.linkedin %}
+                                                <a href="{{ trainer.linkedin }}" target="_blank">
+                                                    <i class="fab fa-linkedin" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if trainer.twitter %}
+                                                <a href="{{ trainer.twitter }}" target="_blank">
+                                                    <i class="fab fa-twitter" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if trainer.github %}
+                                                <a href="{{ trainer.github }}" target="_blank">
+                                                    <i class="fab fa-github" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <p>No developer information available.</p>
+                                    {% endif %}
+                                    </div>
+                                    
+                                </div>
+                                <div class="store-img">
+                                    <img class="lazyload" data-src="{{trainer.profile_image.url}}" src="{{trainer.profile_image.url}}" alt="store-img">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="paris" role="tabpanel">
+                            <div class="widget-card-store align-items-center tf-grid-layout md-col-2">
+                                <div class="store-item-info">
+                                    <h5 class="store-heading">{{developer.first_name  | capfirst }} {{developer.last_name }}</h5>
+                                    <div class="description">
+                                    {% if developer %}
+                                        <!-- About -->
+                                        <p>{{ developer.about | safe }}</p>
+
+                                        <!-- Working Hours -->
+                                        <p>
+                                            Mon - Fri: 8:30am - 10:30pm<br>
+                                            Saturday: 8:30am - 10:30pm<br>
+                                            Sunday: Closed
+                                        </p><br>
+
+                                        <!-- Email & Phone -->
+                                        <p>
+                                            {% if developer.email %}
+                                                <i class="fas fa-envelope" style="padding-right:10px;"></i>
+                                                <a href="mailto:{{ developer.email }}">{{ developer.email }}</a>
+                                            {% endif %}
+                                        </p>
+                                        <p>
+                                            {% if developer.phone %}
+                                                <i class="fas fa-phone" style="padding-right:10px;"></i>
+                                                <a href="tel:{{ developer.phone }}">{{ developer.phone }}</a>
+                                            {% endif %}
+                                        </p>
+
+                                        <!-- Social Media Links -->
+                                        <div class="social-links">
+                                            {% if developer.facebook %}
+                                                <a href="{{ developer.facebook }}" target="_blank">
+                                                    <i class="fab fa-facebook" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if developer.linkedin %}
+                                                <a href="{{ developer.linkedin }}" target="_blank">
+                                                    <i class="fab fa-linkedin" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if developer.twitter %}
+                                                <a href="{{ developer.twitter }}" target="_blank">
+                                                    <i class="fab fa-twitter" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                            {% if developer.github %}
+                                                <a href="{{ developer.github }}" target="_blank">
+                                                    <i class="fab fa-github" style="padding:10px;font-size:20px;"></i>
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <p>No developer information available.</p>
+                                    {% endif %}
+                                </div>
+
+
+                                </div>
+                                <div class="store-img">
+                                    <img class="lazyload" data-src="{{ developer.profile_image.url }}" src="{{ developer.profile_image.url }}" alt="store-img">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /Store --> 
+        <!-- /FAQ -->
+
+
+        
+                 <!-- Blogs post -->
+        <section class="flat-spacing-14">
+            <div class="container">
+                <div class="flat-title wow fadeInUp" data-wow-delay="0s">
+                    <span class="title fw-6">Gallery</span>
+                </div>
+                <div class="hover-sw-nav hover-sw-4 view-default">
+                    <div class="swiper tf-sw-recent" data-preview="3" data-tablet="3" data-mobile="1" data-space-lg="30" data-space-md="30" data-space="15" data-pagination="1" data-pagination-md="1" data-pagination-lg="1">
+                        <div class="swiper-wrapper">
+                            {% for blog in blogs %}
+                            <div class="swiper-slide" lazy="true">
+                                <div class="blog-article-item wow fadeInUp" data-wow-delay="0s">
+                                    <div class="article-thumb rounded-0">
+                                        <a href="{% url "blog_detail" blog.pk %}">
+                                            <img class="lazyload" data-src="{{blog.thumbnail.url}}" src="{{blog.thumbnail.url}}" alt="img-blog">
+                                        </a>
+                                        <div class="article-label">
+                                            <a href="{% url "blog_detail" blog.pk %}" class="animate-hover-btn btn-icon btn-sm radius-3 tf-btn text-capitalize">GITP</a>
+                                        </div>
+                                    </div>
+                                    <div class="article-content">
+                                        <div class="article-title">
+                                            <a href="{% url "blog_detail" blog.pk %}" class="">{{blog.title | capfirst }}</a>
+                                        </div>
+                                        <div class="article-btn">
+                                            <a href="{% url "blog_detail" blog.pk %}" class="tf-btn btn-line fw-6">Read more<i class="icon icon-arrow1-top-left"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                    <div class="nav-sw nav-next-slider nav-next-recent box-icon w_46 round"><span class="icon icon-arrow-left"></span></div>
+                    <div class="nav-sw nav-prev-slider nav-prev-recent box-icon w_46 round"><span class="icon icon-arrow-right"></span></div>
+                    <div class="sw-dots style-2 sw-pagination-recent justify-content-center"></div>
+                </div>
+            </div>
+        </section>
+        <!-- /Blogs post -->
+
+
+        
+                  <!-- Location -->
+       <section class="d-none d-md-block">
+            <div class="container">
+                <div class="flat-location">
+                    <div class="banner-map">
+                        <img class="lazyload" 
+                            data-src="{% static 'MainApps/images/gurukulmaps.png' %}" 
+                            src="{% static 'MainApps/images/gurukulmaps.png' %}" 
+                            alt="map" 
+                            style="
+                                width: 100%;
+                                max-width: 100%;
+                                height: auto;
+                                display: block;
+                                object-fit: contain;
+                                border-radius: 8px;
+                                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                            ">
+                    </div>
+                    <div class="content">
+                        <h3 class="heading wow fadeInUp" data-wow-delay="0s">{{website.name | capfirst }}</h3>
+                        <p class="subtext wow fadeInUp" data-wow-delay="0s">
+                            {{website.zip_code}} , {{website.address | capfirst }}, Parsa, Nepal
+                            <br>
+                            {{website.email}}
+                            <br>
+                            (+977-{{website.phone}}) 
+                        </p>
+                        <p class="subtext wow fadeInUp" data-wow-delay="0s">
+                            Mon - Fri, 8:30am - 10:30pm
+                            <br>
+                            Saturday, 8:30am - 10:30pm
+                            <br>
+                            Sunday, 8:30am - 10:30pm
+                        </p>
+                        <a href="https://maps.app.goo.gl/yojsu421ZyBntQE58" target="_self" class="tf-btn btn-line collection-other-link fw-6 wow fadeInUp" data-wow-delay="0s">
+                            Get Directions<i class="icon icon-arrow1-top-left"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+           <!-- Icon box -->
+        <section class="flat-spacing-1 flat-iconbox">
+            <div class="container">
+                <div class="wrap-carousel wrap-mobile wow fadeInUp" data-wow-delay="0s">
+                    <div class="swiper tf-sw-mobile" data-preview="1" data-space="15">
+                        <div class="swiper-wrapper wrap-iconbox">
+                            <div class="swiper-slide">
+                                <div class="tf-icon-box style-row">
+                                    <div class="icon">
+                                        <i class="icon-shipping"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="title fw-4">Free Shipping</div>
+                                        <p>Free shipping over order Rs 1lakh</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="tf-icon-box style-row">
+                                    <div class="icon">
+                                        <i class="icon-payment fs-22"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="title fw-4">Flexible Payment</div>
+                                        <p>Pay with Multiple Credit Cards</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="tf-icon-box style-row">
+                                    <div class="icon">
+                                        <i class="icon-return fs-20"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="title fw-4">14 Day Returns</div>
+                                        <p>Within 30 days for an exchange</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="tf-icon-box style-row">
+                                    <div class="icon">
+                                        <i class="icon-suport"></i>
+                                    </div>
+                                    <div class="content">
+                                        <div class="title fw-4">Premium Support</div>
+                                        <p>Outstanding premium support</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                    <div class="sw-dots style-2 sw-pagination-mb justify-content-center"></div>
+                </div>
+            </div>
+        </section>
+        <!-- /Icon box -->
+        <!-- /Location -->
+        <!-- /choose us -->
+
+
+        
+         
+{% endblock %}

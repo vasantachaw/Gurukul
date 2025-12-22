@@ -1,0 +1,121 @@
+
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} My Account - Addresses {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %} 
+    <!-- Main content -->
+      
+        <!-- page-title -->
+        <div class="tf-page-title">
+            <div class="container-full">
+                <div class="heading text-center">Addresses</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        
+        <!-- page-cart -->
+        <section class="flat-spacing-11">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <ul class="my-account-nav">
+                            <li><a href="{% url "myaccount" %}" class="my-account-nav-item ">Dashboard</a></li>
+                            <li><a href="{% url "myorder" %}" class="my-account-nav-item">Orders</a></li>
+                            <li><a href="{% url "myaddress" %}" class="my-account-nav-item active">Addresses</a></li>
+                            <li><a href="{% url "edit_password" %}" class="my-account-nav-item">Password Change</a></li>
+                            <li><a href="{% url "logout" %}" class="my-account-nav-item">Logout</a></li>
+                        </ul>
+                    </div>
+                   <div class="col-lg-9">
+                        <div class="my-account-content account-address">
+
+                            <!-- Profile Picture -->
+                            
+
+                            <!-- Profile Details Table -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <th>Profile Picture</th>
+                                            <td><div style="width:50%; margin-bottom:10px;">
+                                                {% if profile.pr_pic %}
+                                                    <img src="{{ profile.pr_pic.url }}" alt="Profile Picture" 
+                                                        style="width:50px; height:50px; object-fit:cover; border-radius:50%; border:2px solid #ddd; float:left; margin-right:10px;">
+                                                {% else %}
+                                                    <div style="width:50px; height:50px; border-radius:50%; background-color:rgb(183, 183, 183); color:#fff; 
+                                                                display:flex; align-items:center; justify-content:center; font-weight:bold; float:left; margin-right:10px; font-size:20px; border:2px solid #ddd;">
+                                                        {{ profile.full_name|default:"U"|first|upper }}
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+
+
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Username</th>
+                                            <td>{{ request.user.username |default:"N/A" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Full Name</th>
+                                            <td>{{ profile.full_name|default:"N/A" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Email</th>
+                                            <td>{{ profile.user.email|default:"N/A" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Phone</th>
+                                            <td>{{ profile.ph_num|default:"N/A" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Bio</th>
+                                            <td>{{ profile.bio|default:"N/A" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Address</th>
+                                            <td>{{ profile.address|default:"N/A" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>City</th>
+                                            <td>{{ profile.city|default:"N/A" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Date of Birth</th>
+                                            <td>{% if profile.dob %}{{ profile.dob|date:"F j, Y" }}{% else %}N/A{% endif %}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Gender</th>
+                                            <td>{{ profile.get_gender_display }}</td>
+                                        </tr>
+                                       
+                                       <tr>
+                                            <th>Joined</th>
+                                            <td>{{ profile.created_at|date:"M j, Y" }}</td>
+                                        </tr>
+
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="mt-3 d-flex gap-2">
+                                <a href="{% url "edit_address" %}" class="tf-btn btn-fill animate-hover-btn rounded-0 justify-content-center">
+                                    <span>Edit</span>
+                                </a>
+                               
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <!-- page-cart -->
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'MainApps/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %} Gallery List {% endblock %}
+
+{% block main_content %} 
+    <!-- Main content -->
+    <!-- page-title -->
+    <div class="tf-page-title">
+        <div class="container-full">
+            <div class="row">
+                <div class="col-12">
+                    <div class="heading text-center">Galleries</div>
+                    <ul class="breadcrumbs d-flex align-items-center justify-content-center">
+                        <li>
+                            <a href="{% url 'home' %}">Home</a>
+                        </li>
+                        <li>
+                            <i class="icon-arrow-right"></i>
+                        </li>
+                        <li>List</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /page-title -->
+   
+    <!-- blog-list -->
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="blog-list-main">
+                    <div class="list-blog">
+                        {% if blogs %}
+                            {% for blog in blogs %}
+                            <div class="blog-article-item style-row">
+                                <div class="article-thumb">
+                                    <a href="{% url 'blog_detail' blog.pk %}">
+                                        {% if blog.thumbnail %}
+                                            <img class="lazyload" data-src="{{ blog.thumbnail.url }}" src="{{ blog.thumbnail.url }}" alt="{{ blog.title }}">
+                                        {% else %}
+                                            <img class="lazyload" data-src="images/blog/blog-1.jpg" src="images/blog/blog-1.jpg" alt="{{ blog.title }}">
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div class="article-content">
+                                    <div class="article-title">
+                                        <a href="{% url 'blog_detail' blog.pk %}">{{ blog.title }}</a>
+                                    </div>
+                                    <div class="desc">
+                                        {{ blog.content|striptags|truncatewords:25 }}
+                                    </div>
+                                    <div class="article-btn">
+                                        <a href="{% url 'blog_detail' blog.pk %}" class="tf-btn btn-line fw-6">Read more<i class="icon icon-arrow1-top-left"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <!-- Pagination -->
+                            {% if blogs.has_other_pages %}
+                            <ul class="wg-pagination">
+                                {% if blogs.has_previous %}
+                                <li>
+                                    <a href="?page={{ blogs.previous_page_number }}" class="pagination-item animate-hover-btn"><i class="icon-arrow-left"></i></a>
+                                </li>
+                                {% endif %}
+
+                                {% for num in blogs.paginator.page_range %}
+                                    {% if blogs.number == num %}
+                                        <li class="active"><div class="pagination-item">{{ num }}</div></li>
+                                    {% else %}
+                                        <li><a href="?page={{ num }}" class="pagination-item animate-hover-btn">{{ num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if blogs.has_next %}
+                                <li>
+                                    <a href="?page={{ blogs.next_page_number }}" class="pagination-item animate-hover-btn"><i class="icon-arrow-right"></i></a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                            {% endif %}
+                        {% else %}
+                            <h4>No Gallery available.</h4>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-sidebar-mobile">
+        <button data-bs-toggle="offcanvas" data-bs-target="#sidebarmobile" aria-controls="offcanvasRight"><i class="icon-open"></i></button>
+    </div>
+    <!-- /blog-list -->
+{% endblock %}

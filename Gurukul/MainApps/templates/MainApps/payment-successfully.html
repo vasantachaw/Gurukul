@@ -1,0 +1,82 @@
+{% extends 'MainApps/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %} Payment Verified {% endblock %}
+{% block main_content %} 
+
+<!-- page-title -->
+<div class="tf-page-title">
+    <div class="container-full">
+        <div class="heading text-center">Payment Verified</div>
+    </div>
+</div>
+<!-- /page-title -->
+
+<!-- page-cart -->
+<section class="flat-spacing-11">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-4 col-lg-6 col-md-8">
+                <div class="tf-page-cart-checkout">
+                    <div class="d-flex gap-10 align-items-center mb_20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M0 0h24v24H0V0z" fill="none"></path>
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 
+                                    10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4 
+                                    1.41-1.41L11 13.17l5.59-5.59L18 
+                                    9l-7 8z">
+                            </path>
+                        </svg>
+                       
+                        <h5 class="fw-5">
+                            {% if data.payment_method == 'esewa' %}
+                                eSewa  Verified
+                            {% elif data.payment_method == 'Khalti' %}
+                                Khalti  Verified
+                            {% elif data.payment_method == 'paypal' %}
+                                PayPal  Verified
+                            {% else %}
+                                Payment Verified
+                            {% endif %}
+                        </h5>
+                    </div> <hr>
+
+                    {% if data %}
+                    <p class="mb_20">
+                        Thank you! Your <span style="; font-weight: bolder;">
+                            {% if data.payment_method == "esewa" %}
+                                eSewa
+                            {% elif data.payment_method == "khalti" %}
+                                Khalti
+                            {% elif data.payment_method == "paypal" %}
+                                PayPal
+                            {% else %}
+                                {{ data.payment_method|capfirst }}
+                            {% endif %}
+                        </span>             
+                        payment has been processed successfully. <br>
+                        <strong>Order Code:</strong> {{ data.order_code }} <br>
+                        <strong>Total Amount:</strong> Rs {{ data.total_amount }} <br>
+                        <strong>Transaction ID:</strong> {{ data.transaction_id }}
+                    </p>
+                    {% else %}
+                    <p class="mb_20">
+                        Thank you! Your payment has been processed successfully.
+                    </p>
+                    {% endif %}
+
+                    <a href="{% url 'productList' %}" class="tf-btn mb_20 w-100 btn-fill animate-hover-btn radius-3 justify-content-center">
+                        <span>Continue Shopping</span>
+                    </a>
+
+                    <p>Have a question? 
+                        <a href="{% url 'contact' %}" class="text_primary">Contact Support</a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- page-cart -->
+{% endblock %}

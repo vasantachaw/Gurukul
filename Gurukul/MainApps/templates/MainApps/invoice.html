@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+{% load static %}
+{% load custom_filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ websites.favicon.url|default:'{% static "img/default_favicon.ico" %}' }}" type="image/x-icon">
+    <title>Invoice - Gurukul IT Plaza</title>
+    <style>
+        /* Base Styles for all screen sizes */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-size: 14px;
+        }
+
+        /* Invoice Container - Flexible width */
+        .invoice-container {
+            width: 90%; 
+            max-width: 800px; 
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative; 
+            overflow: hidden; 
+        }
+
+        /* --- Watermark Logo Style --- */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            width: 80%; /* Adjusted size */
+            height: auto;
+            opacity: 0.04;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .watermark img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* --- Header Section --- */
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            position: relative; 
+            z-index: 1;
+        }
+        .logo-section { display: flex; align-items: center; }
+        .logo-box { width: 40px; height: 40px; background-color: #000; display: inline-block; margin-right: 10px; }
+        .company-name { font-size: 16px; font-weight: bold; line-height: 1.1; }
+        .invoice-title { font-size: 32px; font-weight: bold; margin: 0; }
+
+        /* --- Billing, Shipping, and Date Info Container --- */
+        /* Grouping addresses and invoice details together */
+        .info-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Group for Bill To and Ship To addresses */
+        .address-group {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .bill-to, .ship-to {
+            line-height: 1.4;
+            flex: 1; 
+            min-width: 40%;
+        }
+
+        .bill-to h3, .ship-to h3 {
+            font-size: 12px;
+            margin: 0 0 5px 0;
+            font-weight: normal;
+        }
+        .client-name { font-size: 16px; font-weight: bold; margin-bottom: 5px !important; }
+        .bill-to p, .ship-to p, .invoice-details p { margin: 0; }
+
+        .invoice-details { text-align: right; }
+
+        /* --- Items Table --- */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        .items-table th, .items-table td {
+            padding: 8px 5px; /* Added horizontal padding for clarity */
+            text-align: left;
+            font-size: 12px;
+        }
+        .items-table th {
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            text-transform: uppercase;
+        }
+        .items-table td {
+            border-bottom: 1px solid #ddd;
+        }
+        
+        /* Table Column Alignment - 6 Columns: S.N, Code, Name, Qty, Price, Total */
+        .items-table .col-name { text-align: left; }
+        .items-table .col-qty, .items-table .col-price, .items-table .col-total {
+            text-align: right; /* Align Qty, Price, and Total to the right */
+        }
+
+        /* Table Footer Styling */
+       .items-table tfoot th {
+            border-top: 2px solid #4d4d4dff;  /* light gray line */
+            border-bottom: none;         /* remove bottom line to avoid double line */
+            padding: 8px 5px;
+            font-size: 16px;
+        }
+
+
+        /* --- Footer Section --- */
+        .footer-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 40px;
+            position: relative; 
+            z-index: 1;
+        }
+        .signature-box { width: 20%; }
+        .signature {
+            font-family: cursive;
+            font-size: 24px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #000;
+            display: block;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .administrator { font-size: 10px; text-align: left; }
+        .thank-you { font-size: 20px; font-weight: bold; text-align: right; }
+
+        /* --- Contact Footer --- */
+        .contact-footer {
+            border-top: 1px solid #000;
+            padding-top: 10px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Print Button Styles (Visible on screen only) --- */
+        .print-button-container { width: 90%; max-width: 800px; margin: 20px auto 0 auto; text-align: right; }
+        .print-button { padding: 10px 20px; background-color: #000; color: #fff; border: none; cursor: pointer; font-size: 14px; font-weight: bold; }
+        .print-button:hover { background-color: #333; }
+
+        /* ================================================= */
+        /* MEDIA QUERIES FOR SMALL SCREENS (Phones) */
+        /* ================================================= */
+        @media only screen and (max-width: 600px) {
+            .invoice-container { width: 95%; padding: 15px; }
+            body { font-size: 12px; }
+            .invoice-title { font-size: 28px; }
+
+            /* Addresses stack vertically */
+            .address-group { flex-direction: column; gap: 15px; }
+            .bill-to, .ship-to { min-width: 100%; }
+
+            /* Addresses and Details stack vertically */
+            .info-container { flex-direction: column; gap: 20px; }
+            .invoice-details { text-align: left; }
+
+            .items-table th, .items-table td { padding: 6px 0; font-size: 10px; }
+            .footer-section { flex-direction: column; align-items: flex-start; margin-top: 30px; }
+            .signature-box { width: 100%; margin-bottom: 20px; }
+            .signature { font-size: 20px; }
+            .thank-you { text-align: left; }
+            .contact-footer { flex-direction: column; gap: 5px; }
+            .print-button-container { width: 95%; }
+            .watermark { width: 90%; } 
+        }
+        
+        /* ================================================= */
+        /* PRINT STYLES */
+        /* ================================================= */
+        @media print {
+            .invoice-container { box-shadow: none; border: none; margin: 0; width: 100%; padding: 0; }
+            .print-button-container { display: none; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="print-button-container">
+        <button class="print-button" onclick="window.print()">Print Invoice</button>
+    </div>
+
+    <div class="invoice-container">
+        
+        <div class="watermark">
+            <img src="{{ websites.logo2.url }}" alt="Company Logo Watermark">
+        </div>
+
+        <div class="invoice-header">
+            <div class="logo-section">
+                
+                <img src="{{ websites.logo2.url|default:'placeholder-logo.png' }}" 
+                    alt="{{ websites.name|default:'Company Logo' }}" 
+                    class="company-logo-img" style="width:40px; height:40px; object-fit:contain; margin-right:10px;">
+                <div class="company-name">
+                    {{ websites.name|default:"Arowwai Industries" }}
+                </div>
+            </div>
+            <h1 class="invoice-title">INVOICE</h1>
+        </div>
+
+        <div class="info-container">
+            <div class="address-group">
+                
+                <div class="bill-to">
+                    <h3>INVOICE TO: </h3>
+                    <p class="client-name">{{ order.full_name|default:"Basant Chaudhary" }}</p>
+                    <p>{{ order.address|default:"Kathmandu, Nepal" }}</p>
+                    <p>{{ order.email|default:"chawbasanta@gmail.com" }}</p>
+                    <p>{{ order.phone|default:"9808046983" }}</p>
+                </div>
+
+                <div class="ship-to">
+                    <h3>SHIP FROM: </h3>
+                    <p class="client-name">{{ websites.name|default:"Arowwai Industries" }}</p>
+                    <p>{{ websites.address|default:"123 Anywhere St., Any City" }},{{websites.zip_code|default:"rrr"}}</p>
+                    <p>{{ websites.website_url|default:"www.gurukulitplaza.com" }}</p>
+                    <p>+977-{{ websites.phone|default:"123-456-7890" }}</p>
+                </div>
+            </div>
+            
+            <div class="invoice-details">
+                <p>Invoice No : {{ order.order_code|default:"1234" }}</p>
+                <p>Invoice Date : {{ order.created_at|date:"M d, Y"|default:"Feb 05, 2023" }}</p>
+            </div>
+        </div>
+
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width:5%;">S.N</th>
+                    <th style="width:15%;">Product Code</th>
+                    <th style="width:40%;">Product Name</th>
+                    <th class="col-qty" style="width:10%;">Qty</th>
+                    <th class="col-price" style="width:15%;">Price</th>
+                    <th class="col-total" style="width:15%;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.peripheral.product_code|default:"--" }}</td>
+                    <td>{{ item.peripheral.name }}</td>
+                    <td class="col-qty">{{ item.quantity }}</td>
+                    <td class="col-price">Rs. {{ item.peripheral.discount_price }}</td> 
+                    <td class="col-total">Rs. {{ item.total_cost }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No items found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="4" style="text-align:right;">Subtotal:</th>
+                    <th colspan="2" class="col-total">Rs. {{ order.total_transaction_amount|default:"840" }}</th>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align:right;">Tax:</th>
+                    <th colspan="2" class="col-total">Rs. {{ order.tax_amount|default:"0%" }}</th>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align:right;">Grand Total:</th>
+                    <th colspan="2" class="col-total">
+                     Rs. {{ order.total_transaction_amount|default:"850"|mul:1.0|floatformat:2 }}
+
+                    </th>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="footer-section">
+            <div class="signature-box">
+                <img src="{{ order.signature_image.url|default:'https://www.freepnglogos.com/uploads/signature-png/nguy-ecnh-nguyen-van-binh-signature-png-5.png' }}" 
+                    alt="Authorized Signature" 
+                    class="signature-img" style="width:80%; height:auto; object-fit:contain; margin-bottom:5px;">
+
+                <span class="administrator">Subodh Patel</span>
+            </div>
+            <div class="thank-you">
+                Thank you for your trust !
+            </div>
+        </div>
+
+        <div class="contact-footer">
+            <span>Contact: +977 -&nbsp{{ websites.phone|default:"+123-456-7890" }}</span>
+            <span>{{ websites.website_url|default:"www.gurukulitplaza.com" }}</span>
+            <span>{{ websites.address|default:"123 Anywhere St., Any City" }},{{websites.zip_code|default:"rrr"}}</span>
+        </div>
+
+    </div>
+
+</body>
+</html>

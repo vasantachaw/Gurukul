@@ -1,0 +1,172 @@
+
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} Course Enquiry {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %} 
+
+        <!-- page-title -->
+        <div class="tf-page-title style-2">
+            <div class="container-full">
+                <div class="heading text-center">Book a Course</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        <!-- map -->
+        <section class="flat-spacing-9">
+            <div class="container">
+                <div class="tf-grid-layout gap-0 lg-col-2">
+                    <div class="w-100">
+                       <form id="checkout-form" class="form-checkout" method="POST">
+                            {% csrf_token %}
+
+                            <div class="box grid-2">
+                                <fieldset class="fieldset">
+                                    <label for="first-name">First Name</label>
+                                    <input type="text" id="first-name" name="first_name" required>
+                                </fieldset>
+
+                                <fieldset class="fieldset">
+                                    <label for="last-name">Last Name</label>
+                                    <input type="text" id="last-name" name="last_name" required>
+                                </fieldset>
+                            </div>
+
+                            <fieldset class="box fieldset">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </fieldset>
+
+                            <fieldset class="box fieldset">
+                                <label for="phone">Phone Number</label>
+                                <input type="text" id="phone" name="phone" required>
+                            </fieldset>
+
+                            <fieldset class="box fieldset">
+                                <label for="course">Course</label>
+                                <div class="select-custom">
+                                    <select class="tf-select w-100" id="course" name="course" required>
+                                        <option value="">Select a Course</option>
+                                        {% for course in courses %}
+                                            <option value="{{ course.id }}">{{ course.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="box fieldset">
+                                <label for="class_time">Class Time</label>
+                                <div class="select-custom">
+                                    <select class="tf-select w-100" id="class_time" name="class_time" required>
+                                        <option value="">Select Class Time</option>
+                                        {% for value, label in class_time_choices %}
+                                            <option value="{{ value }}">{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="box fieldset">
+                                <label for="course_mode">Class Mode</label>
+                                <div class="select-custom">
+                                    <select class="tf-select w-100" id="course_mode" name="course_mode" required>
+                                        <option value="">Select Online / Offline</option>
+                                        {% for value, label in course_mode_choices %}
+                                            <option value="{{ value }}">{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </fieldset>
+
+
+                            <fieldset class="box fieldset">
+                                <label for="note">Notes (optional)</label>
+                                <textarea name="note" id="note"></textarea>
+                            </fieldset>
+
+                            <div class="send-wrap">
+                                <button type="submit" class="tf-btn w-100 radius-3 btn-fill animate-hover-btn justify-content-center">Book</button>
+                            </div>
+                        </form>
+
+                    </div>               
+                    <div class="tf-content-left has-mt ">
+                        <div class="sticky-top">
+                            <h5 class="mb_20">Visit Our Gurukul Institute </h5>
+                            
+                            <div class="mb_20">
+                                <p class="mb_15"><strong>Address</strong></p>
+                                <p>{{detail.address | capfirst }} , City:Jeetpur Simara, Zip Code:{{detail.zip_code}},Bara, Nepal</p>
+                            </div>
+                            <div class="mb_20">
+                                <p class="mb_15"><strong>Phone</strong></p>
+                                <p>{{detail.phone}}</p>
+                            </div>
+                            <div class="mb_20">
+                                <p class="mb_15"><strong>Email</strong></p>
+                                <p>{{detail.email}}</p>
+                            </div>
+                           <div class="mb_36">
+                                <p class="mb_15"><strong>Office Hours</strong></p>
+                                <p class="mb_15">Our institute is now open for admissions and consultations,</p>
+                                <p>Sunday to Friday, 9am to 5pm</p>
+                            </div>
+
+                            <div>
+                                <ul class="tf-social-icon d-flex gap-20 style-default">
+                                    <li><a href="#" class="box-icon link round social-facebook border-line-black"><i class="icon fs-14 icon-fb"></i></a></li>
+                                    <li><a href="#" class="box-icon link round social-twiter border-line-black"><i class="icon fs-12 icon-Icon-x"></i></a></li>
+                                    <li><a href="#" class="box-icon link round social-instagram border-line-black"><i class="icon fs-14 icon-instagram"></i></a></li>
+                                    <li><a href="#" class="box-icon link round social-tiktok border-line-black"><i class="icon fs-14 icon-tiktok"></i></a></li>
+                                    <li><a href="#" class="box-icon link round social-pinterest border-line-black"><i class="icon fs-14 icon-pinterest-1"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /map -->
+        <!-- form -->
+        <section class="bg_grey-7 flat-spacing-9">
+            <div class="container">
+                <div class="flat-title">
+                    <span class="title">Location</span>
+                </div>
+
+                <!-- Responsive map wrapper -->
+                <div style="position: relative; overflow: hidden; padding-bottom: 41%; height: 0; max-width: 100%;">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d887.6861479071498!2d84.95691071260667!3d27.132853498532302!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb54df192fdfe5%3A0xd884a8fff8f334f7!2sGurukul%20Computer%20Institute!5e0!3m2!1sen!2snp!4v1763020660344!5m2!1sen!2snp"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;" 
+                        allowfullscreen 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+
+        
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+function showToast(message, duration = 3000) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `
+        <button type="button" onclick="this.parentElement.remove()" class="toast-close">×</button>
+        ${message}
+    `;
+    const container = document.getElementById('toastContainer');
+    container.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 100);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400);
+    }, duration);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends 'MainApps/base.html' %} # to extend base.html
+{% load static %} # to use static files
+{%  load custom_filters %} # to use custom filters
+{% block title %} Edit Address {% endblock %} # to set the title of the page
+# to define the main content block
+{% block main_content %} 
+    <!-- Main content -->
+        <!-- page-title -->
+        <div class="tf-page-title">
+            <div class="container-full">
+                <div class="heading text-center">Edit Address</div>
+            </div>
+        </div>
+        <!-- /page-title -->
+        
+        <!-- page-cart -->
+        <section class="flat-spacing-11">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <ul class="my-account-nav">
+                            <li><a href="{% url "myaccount" %}" class="my-account-nav-item ">Dashboard</a></li>
+                            <li><a href="{% url "myorder" %}" class="my-account-nav-item">Orders</a></li>
+                            <li><a href="{% url "myaddress" %}" class="my-account-nav-item active">Addresses</a></li>                            <li><span class="my-account-nav-item ">Account Details</span></li>
+                            <li><a href="my-account-wishlist.html" class="my-account-nav-item">Password Change</a></li>
+                            <li><a href="login.html" class="my-account-nav-item">Logout</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="my-account-content account-edit">
+                            <div class="">
+                                <form id="form-profile-update" action="{% url 'update_profile' %}" method="POST" enctype="multipart/form-data">
+									{% csrf_token %}
+
+									<!-- Profile Picture -->
+									<div class="tf-field style-1 mb_15 text-center">
+										<input class="tf-field-input tf-input" type="file" id="pr_pic" name="pr_pic" accept="image/*" onchange="previewImage(event)">
+										<label class="tf-field-label fw-4 text_black-2" for="pr_pic">Profile Picture</label>
+										<div class="mt_10">
+											<img id="imagePreview" src="#" alt="Profile Preview" style="display:none; width:120px; height:120px; border-radius:50%; object-fit:cover;">
+										</div>
+									</div>
+
+									<!-- Username -->
+									<div class="tf-field style-1 mb_15">
+										<input class="tf-field-input tf-input" placeholder=" " type="text" id="username" name="username" required>
+										<label class="tf-field-label fw-4 text_black-2" for="username">Username</label>
+									</div>
+
+									<!-- First Name -->
+									<div class="tf-field style-1 mb_15">
+										<input class="tf-field-input tf-input" placeholder=" " type="text" id="first_name" name="first_name" required>
+										<label class="tf-field-label fw-4 text_black-2" for="first_name">First Name</label>
+									</div>
+
+									<!-- Last Name -->
+									<div class="tf-field style-1 mb_15">
+										<input class="tf-field-input tf-input" placeholder=" " type="text" id="last_name" name="last_name">
+										<label class="tf-field-label fw-4 text_black-2" for="last_name">Last Name</label>
+									</div>
+
+									<!-- Email -->
+									<div class="tf-field style-1 mb_15">
+										<input class="tf-field-input tf-input" placeholder=" " type="email" id="email" name="email">
+										<label class="tf-field-label fw-4 text_black-2" for="email">Email</label>
+									</div>
+
+									<!-- Phone Number -->
+									<div class="tf-field style-1 mb_15">
+										<input class="tf-field-input tf-input" placeholder=" " type="text" id="ph_num" name="ph_num" maxlength="10">
+										<label class="tf-field-label fw-4 text_black-2" for="ph_num">Phone Number</label>
+									</div>
+
+									<!-- Bio -->
+									<div class="tf-field style-1 mb_15">
+										<textarea class="tf-field-input tf-input" placeholder=" " id="bio" name="bio" rows="3"></textarea>
+										<label class="tf-field-label fw-4 text_black-2" for="bio">Bio</label>
+									</div>
+
+									<!-- Address -->
+									<div class="tf-field style-1 mb_15">
+										<input class="tf-field-input tf-input" placeholder=" " type="text" id="address" name="address">
+										<label class="tf-field-label fw-4 text_black-2" for="address">Address</label>
+									</div>
+
+									<!-- City -->
+									<div class="tf-field style-1 mb_15">
+										<input class="tf-field-input tf-input" placeholder=" " type="text" id="city" name="city">
+										<label class="tf-field-label fw-4 text_black-2" for="city">City</label>
+									</div>
+
+									<!-- Date of Birth -->
+									<div class="tf-field style-1 mb_15">
+										<input class="tf-field-input tf-input" placeholder=" " type="date" id="dob" name="dob">
+										<label class="tf-field-label fw-4 text_black-2" for="dob">Date of Birth</label>
+									</div>
+
+									<!-- Gender -->
+									<div class="tf-field style-1 mb_15">
+										<select class="tf-field-input tf-input" id="gender" name="gender" required>
+											<option value="" disabled selected>Select Gender</option>
+											<option value="MALE">Male</option>
+											<option value="FEMALE">Female</option>
+											<option value="OTHER">Other</option>
+										</select>
+										<label class="tf-field-label fw-4 text_black-2" for="gender">Gender</label>
+									</div>
+
+									<!-- Submit Button -->
+									<div class="mt_20 text-center">
+										<button type="submit" class="tf-btn btn-fill animate-hover-btn rounded-0 justify-content-center">
+											<span>Save Changes</span>
+										</button>
+									</div>
+
+									<!-- Status Message -->
+									<div id="formMessage" class="mt_15 text-center fw-5"></div>
+								</form>
+
+								<!-- JavaScript -->
+								<script>
+								// Image Preview
+								function previewImage(event) {
+									const reader = new FileReader();
+									reader.onload = function() {
+										const output = document.getElementById('imagePreview');
+										output.src = reader.result;
+										output.style.display = 'block';
+									};
+									reader.readAsDataURL(event.target.files[0]);
+								}
+
+								// AJAX Form Submit
+								document.getElementById('form-profile-update').addEventListener('submit', function(e) {
+									e.preventDefault();
+
+									const form = this;
+									const formData = new FormData(form);
+									const messageBox = document.getElementById('formMessage');
+
+									fetch(form.action, {
+										method: 'POST',
+										headers: {
+											'X-Requested-With': 'XMLHttpRequest',
+											'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value,
+										},
+										body: formData
+									})
+									.then(response => response.json())
+									.then(data => {
+										messageBox.style.color = data.success ? 'green' : 'red';
+										messageBox.textContent = data.message;
+									})
+									.catch(() => {
+										messageBox.style.color = 'red';
+										messageBox.textContent = 'Something went wrong. Please try again.';
+									});
+								});
+								</script>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- page-cart -->
+{% endblock %}

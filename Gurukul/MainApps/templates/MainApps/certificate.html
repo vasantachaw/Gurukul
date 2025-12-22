@@ -1,0 +1,93 @@
+{% extends 'MainApps/base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Certificate{% endblock %}
+
+{% block main_content %}
+<div class="blog-detail">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="blog-detail-main">
+
+                    {% if certificate_exists %}
+                        <div class="blog-detail-main-heading">
+                            <div class="title">Your Course Certificate</div>
+                            <div class="meta">Congratulations!</div>
+
+                            <div class="image text-center" style="border:1px solid geen;">
+                                <img id="certificate-image" src="{% url 'certificate' %}" 
+                                     alt="Certificate" class="img-fluid">
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="mt-3 d-flex justify-content-center gap-3">
+                                <a href="{% url 'certificate' %}" download="certificate.png" class="btn btn-dark">
+                                    Download Certificate
+                                </a>
+                                <button class="btn btn-secondary" onclick="printCertificate()">Print Certificate</button>
+                            </div>
+                        </div>
+
+                        <blockquote>
+                            <div class="text">
+                                Congratulations on successfully completing your course! 
+                                This certificate proudly recognizes your achievement, dedication, and commitment to learning.
+                            </div>
+                        </blockquote>
+                    {% else %}
+                        <div class="alert alert-warning text-center">
+                            No certificate available yet. Please complete a course first.
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="btn-sidebar-mobile d-flex">
+    <button data-bs-toggle="offcanvas" data-bs-target="#sidebarmobile" aria-controls="offcanvasRight">
+        <i class="icon-open"></i>
+    </button>
+</div>
+
+<script>function printCertificate() {
+    var img = document.getElementById('certificate-image');
+    var w = window.open('', '_blank');
+    w.document.write(`
+        <html>
+        <head>
+            <title>Print Certificate</title>
+            <style>
+                @media print {
+                    body {
+                        margin: 0;
+                        padding: 0;
+                    }
+                    img {
+                        width: 100%;
+                        height: auto;
+                        display: block;
+                        page-break-after: avoid;
+                    }
+                }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <img src="${img.src}" onload="window.print();window.close();" />
+        </body>
+        </html>
+    `);
+    w.document.close();
+}
+
+</script>
+{% endblock %}
