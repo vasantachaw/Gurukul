@@ -113,7 +113,7 @@
                         <select class="tf-select w-100" id="course" name="course" required>
                             <option value="">Select a Course</option>
                             {% for course in course_choices %}
-                                <option value="{{ course.id }}">{{ course.name }}</option>
+                                <option value="{{ course.name }}">{{ course.name }}</option>
                             {% endfor %}
                         </select>
                     </fieldset>

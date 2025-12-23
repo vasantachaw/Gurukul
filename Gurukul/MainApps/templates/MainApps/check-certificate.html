@@ -28,7 +28,7 @@
                                         <!-- Certificate details -->
                                         <div style="flex: 1; text-align: justify;">
                                             <p>
-                                                This is to confirm that <strong>{{ student_data.first_name }} {{ student_data.last_name }}</strong>, son/daughter of <strong>{{ student_data.father_name | capfirst }}</strong>, born on <strong>{{ student_data.date_of_birth }}</strong>, has successfully enrolled in the <strong>{{ student_data.programs | capfirst }}</strong> course at <strong>{{ website.name | first_word }} Institute</strong>.  
+                                                This is to confirm that <strong>{{ student_data.first_name }} {{ student_data.last_name }}</strong>, son/daughter of <strong>{{ student_data.father_name | capfirst }}</strong>, born on <strong>{{ student_data.date_of_birth }}</strong>, has successfully enrolled in the <strong>{{ student_data.programs | capfirst }}</strong> course at <strong>{{ website.name | first_word }} Computer Institute</strong>.  
                                                 The course enrollment started on <strong>{{ student_data.booking_date|date:"M j, Y"|default:"N/A" }}</strong> and was completed on <strong>{{ student_data.end_date }}</strong>.  
                                                 The registered address is <strong>{{ student_data.address }}</strong>.  
                                                 Contact details: Phone – <strong>{{ student_data.phone }}</strong>, Email – <strong>{{ student_data.email }}</strong>.
@@ -44,54 +44,56 @@
                                         {% endif %}
 
                                     </div>
-                                        <div class="flat-toggle">
-                                            <div class="toggle-title">Show Certificate</div>
-                                            <div class="toggle-content">
-                                                {% if certificate_obj and certificate_obj.certificate_file %}
-                                                    <img id="certificateImage" src="{{ certificate_obj.certificate_file.url }}" 
-                                                        alt="Certificate" 
-                                                        style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px;">
+                                       <div class="flat-toggle">
+                                        <div class="toggle-title">Show Certificate</div>
+                                        <div class="toggle-content">
+                                            {% if certificate_img_url %}
+                                                <img id="certificateImage" src="{{ certificate_img_url }}" 
+                                                    alt="Certificate" 
+                                                    style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px;">
 
-                                                    <!-- Buttons -->
-                                                    <div style="margin-top: 10px;">
-                                                        <!-- Download button -->
-                                                        <a href="{{ certificate_obj.certificate_file.url }}" 
-                                                        download="certificate_{{ certificate_obj.certificate_no }}.png" 
-                                                        class="btn btn-dark" 
-                                                        style="margin-right: 10px;">
-                                                            Download
-                                                        </a>
+                                                <!-- Buttons -->
+                                                <div style="margin-top: 10px;">
+                                                    <!-- Download button -->
+                                                    <a id="downloadCertificate" 
+                                                    href="{{ certificate_img_url }}" 
+                                                    download="certificate_{{ certificate_obj.certificate_regd_no }}.png" 
+                                                    class="btn btn-dark" 
+                                                    style="margin-right: 10px;">
+                                                        Download
+                                                    </a>
 
-                                                        <!-- Print button -->
-                                                        <button onclick="printCertificate()" class="btn btn-dark">
-                                                            Print
-                                                        </button>
-                                                    </div>
+                                                    <!-- Print button -->
+                                                    <button onclick="printCertificate()" class="btn btn-dark">
+                                                        Print
+                                                    </button>
+                                                </div>
 
-                                                    <!-- Print JS -->
-                                                    <script>
-                                                        function printCertificate() {
-                                                            var imgSrc = document.getElementById("certificateImage").src;
-                                                            var w = window.open("", "_blank");
-                                                            w.document.write('<html><head><title>Print Certificate</title></head><body style="margin:0; padding:0;">');
-                                                            w.document.write('<img id="printImg" src="' + imgSrc + '" style="width:100%; height:auto;">');
-                                                            w.document.write('</body></html>');
-                                                            w.document.close();
+                                                <!-- Print JS -->
+                                                <script>
+                                                    function printCertificate() {
+                                                        var imgSrc = document.getElementById("certificateImage").src;
+                                                        var w = window.open("", "_blank");
+                                                        w.document.write('<html><head><title>Print Certificate</title></head><body style="margin:0; padding:0;">');
+                                                        w.document.write('<img id="printImg" src="' + imgSrc + '" style="width:100%; height:auto;">');
+                                                        w.document.write('</body></html>');
+                                                        w.document.close();
 
-                                                            // Wait for image to load before printing
-                                                            w.document.getElementById('printImg').onload = function() {
-                                                                w.focus();
-                                                                w.print();
-                                                                w.close();
-                                                            };
-                                                        }
-                                                    </script>
+                                                        // Wait for image to load before printing
+                                                        w.document.getElementById('printImg').onload = function() {
+                                                            w.focus();
+                                                            w.print();
+                                                            w.close();
+                                                        };
+                                                    }
+                                                </script>
 
-                                                {% else %}
-                                                    <p>Certificate not available.</p>
-                                                {% endif %}
-                                            </div>
+                                            {% else %}
+                                                <p>Certificate not available.</p>
+                                            {% endif %}
                                         </div>
+                                    </div>
+
                                 {% else %}
                                     <div class="toggle-title active">
                                         Certificate Not Verified
@@ -99,7 +101,7 @@
                                     <div class="toggle-content">
                                         <p>
                                             We could not verify the certificate details.
-                                            Please check the information provided or contact <strong>{{ website.name }}</strong> support for assistance.
+                                            Please check the information provided or contact <strong>{{ website.name | first_word }} Computer Institute</strong> support for assistance.
                                         </p>
                                     </div>
                                 {% endif %}

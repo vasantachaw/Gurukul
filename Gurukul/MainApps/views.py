@@ -25,7 +25,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.core.files.base import ContentFile
-
+from Authentications.models import MerchantAccount
 
 from MainApps.models import (
     AboutUs,
@@ -46,9 +46,30 @@ from MainApps.models import (
 )
 
 
+def compress_and_resize_image(image_file, max_size_kb=100, max_dimensions=(500, 500)):
+    """
+    Compress and resize an image to approximately max_size_kb KB and max_dimensions.
+    Returns a Django ContentFile.
+    """
+    img = Image.open(image_file)
+    img_format = img.format
+
+    # Resize if necessary using LANCZOS resampling
+    img.thumbnail(max_dimensions, Image.Resampling.LANCZOS)
+
+    # Compress iteratively
+    buffer = BytesIO()
+    quality = 90
+    img.save(buffer, format=img_format, quality=quality)
+    while buffer.tell() > max_size_kb * 1024 and quality > 10:
+        quality -= 5
+        buffer.seek(0)
+        buffer.truncate()
+        img.save(buffer, format=img_format, quality=quality)
+
+    return ContentFile(buffer.getvalue(), name=image_file.name)
 
 def new_admission_applications(request):
-    # -------------------- AUTHENTICATION CHECK --------------------
     if not request.user.is_authenticated:
         messages.error(request, "You must be logged in to submit an admission form.")
         return redirect("user_login")
@@ -81,8 +102,10 @@ def new_admission_applications(request):
         }
 
         profile_picture = request.FILES.get("profile_picture")
+        if profile_picture:
+            profile_picture = compress_and_resize_image(profile_picture, max_size_kb=100)
 
-        # -------------------- VALIDATION --------------------
+        # Validation (same as your original code)
         required_fields = {
             "First Name": data["first_name"],
             "Last Name": data["last_name"],
@@ -126,26 +149,12 @@ def new_admission_applications(request):
             messages.error(request, "Invalid parent phone number.")
             return redirect("new_admission_form")
 
-        if data["gender"] not in [g[0] for g in NewAdmissionApplication.GENDER_CHOICES]:
-            messages.error(request, "Invalid gender selection.")
-            return redirect("new_admission_form")
-
-        if data["class_mode"] not in [c[0] for c in NewAdmissionApplication.COURSE_MODE_CHOICES]:
-            messages.error(request, "Invalid class mode.")
-            return redirect("new_admission_form")
-
-        if data["class_time"] not in [t[0] for t in NewAdmissionApplication.CLASS_TIME_CHOICES]:
-            messages.error(request, "Invalid class time.")
-            return redirect("new_admission_form")
-
-        # -------------------- DUPLICATE CHECK --------------------
-        if NewAdmissionApplication.objects.filter(
-            Q(user=request.user) & Q(email=data["email"])
-        ).exists():
+        # Duplicate check
+        if NewAdmissionApplication.objects.filter(Q(user=request.user) & Q(email=data["email"])).exists():
             messages.error(request, "You have already submitted an admission form with this email.")
             return redirect("new_admission_form")
 
-        # -------------------- SAVE --------------------
+        # Save
         NewAdmissionApplication.objects.create(
             user=request.user,
             first_name=data["first_name"],
@@ -174,7 +183,7 @@ def new_admission_applications(request):
         messages.success(request, "Your admission form has been submitted successfully!")
         return redirect("new_admission_form")
 
-    # -------------------- GET REQUEST --------------------
+    # GET request
     context = {
         "gender_choices": NewAdmissionApplication.GENDER_CHOICES,
         "class_time_choices": NewAdmissionApplication.CLASS_TIME_CHOICES,
@@ -185,6 +194,7 @@ def new_admission_applications(request):
     }
 
     return render(request, "MainApps/new-admission-form.html", context)
+
 
 def check_certificate_status(request):
     return render(request, "MainApps/check-certificate.html")
@@ -454,25 +464,33 @@ def show_cart(request):
 
 # ------------------------------
 # CHECKOUT & ORDER VIEWS
-# ------------------------------
 def CheckOut(request):
+    merchant_accounts = MerchantAccount.objects.filter(is_active=True)
+
+    active_gateways = {
+        m.gateway for m in merchant_accounts
+    }
+
     if request.user.is_authenticated:
         pc_cart = PcPeripheralCart.objects.filter(user=request.user)
         total_cart_amount = sum(float(item.total_cost) for item in pc_cart)
-        total_cart_count = sum(item.quantity for item in pc_cart)  # total items in cart
+        total_cart_count = sum(item.quantity for item in pc_cart)
     else:
         pc_cart = []
         total_cart_amount = 0.0
         total_cart_count = 0
+
     return render(
         request,
         "MainApps/checkout.html",
-        context={
+        {
             "pc_cart": pc_cart,
             "total_cart_amount": total_cart_amount,
             "total_cart_count": total_cart_count,
+            "active_gateways": active_gateways,  # 👈 important
         },
     )
+
 
 
 def shipping_and_delivery_info(request):
@@ -694,77 +712,6 @@ def courseBooking(request):
         "detail": detail,
     }
     return render(request, "MainApps/courseBooking.html", context)
-
-
-# def certificate_page(request):
-#     if request.user.is_authenticated:
-#         # Check if the user has a certificate
-#         certificate_exists = Certificate.objects.filter(user=request.user).exists()
-#         context = {
-#             "certificate_exists": certificate_exists,
-#             "user_authenticated": True,
-#         }
-#     else:
-#         # User is not logged in
-#         context = {
-#             "certificate_exists": False,
-#             "user_authenticated": False,
-#         }
-#     return render(request, "MainApps/certificate.html", context)
-
-
-# def cetificate_verify(request):
-#     if not request.user.is_authenticated:
-#         return HttpResponse("Please login first!", status=401)
-
-#     # Latest booking
-#     booking = CourseBooking.objects.filter(user=request.user).last()
-#     if not booking:
-#         return HttpResponse("No course booking found for this user.", status=404)
-
-#     student_name = f"{booking.first_name} {booking.last_name}"
-#     course_name = booking.course
-
-#     # Latest certificate
-#     certificate = Certificate.objects.filter(user=request.user).last()
-#     if not certificate:
-#         return HttpResponse("No certificate found for this user.", status=404)
-
-#     issue_date = certificate.issue_date.strftime("%d/%m/%Y")
-#     certificate_no = certificate.certificate_no
-
-#     # Fetch certificate template
-#     template_obj = Website.objects.filter(certificate__isnull=False).first()
-#     if not template_obj:
-#         return HttpResponse("No certificate template found.", status=404)
-
-#     # Open image
-#     image = Image.open(template_obj.certificate.path)
-#     draw = ImageDraw.Draw(image)
-
-#     # Use a TTF font for larger sizes
-#     font_path = os.path.join(settings.BASE_DIR, "static/fonts/Arial.ttf")
-#     font_large = ImageFont.truetype(font_path, 60)  # student name
-#     font_medium = ImageFont.truetype(font_path, 40)  # course name
-#     font_small = ImageFont.truetype(font_path, 25)  # issue date & certificate number
-
-#     W, H = image.size
-
-#     def center_text(text, font, y):
-#         bbox = draw.textbbox((0, 0), text, font=font)
-#         text_width = bbox[2] - bbox[0]
-#         x = (W - text_width) / 2
-#         draw.text((x, y), text, fill="gray", font=font)
-
-#     center_text(student_name, font_large, 750)
-#     center_text(course_name, font_medium, 920)
-#     draw.text((1785, 40), issue_date, fill="gray", font=font_small)
-#     draw.text((285, 40), f"{certificate_no}", fill="gray", font=font_small)
-
-#     buffer = BytesIO()
-#     image.save(buffer, format="PNG")
-#     buffer.seek(0)
-#     return HttpResponse(buffer, content_type="image/png")
 
 
 def khalti_payment(request):
@@ -1723,22 +1670,12 @@ def privacy_policy(request):
     return render(request, "MainApps/privacy-policy.html")
 
 
-from django.shortcuts import render
-from django.contrib import messages
-from django.core.files.base import ContentFile
-from io import BytesIO
-from PIL import Image, ImageDraw, ImageFont
-import os
-
-from .models import NewAdmissionApplication, Certificate, Website
-from django.conf import settings
-
 def verify_certificate(request):
     student_data = None
     certificate_obj = None
     certificate_img_url = None
 
-    # Fetch Website config (central template and signatures)
+    # Fetch Website config (template and signatures)
     website = Website.objects.last()
     if not website:
         messages.error(request, "Website configuration not found.")
@@ -1753,7 +1690,7 @@ def verify_certificate(request):
             messages.error(request, "Please enter both Date of Birth and Certificate Number.")
             return render(request, "MainApps/check-certificate.html")
 
-        # Fetch certificate directly using certificate number and DOB
+        # Fetch certificate using certificate number and DOB
         certificate_obj = Certificate.objects.filter(
             certificate_regd_no=certificate_number,
             student_information__date_of_birth=dob
@@ -1763,12 +1700,11 @@ def verify_certificate(request):
             messages.error(request, "No certificate found for the given Date of Birth and Certificate Number.")
             return render(request, "MainApps/check-certificate.html")
 
-        # Certificate exists, fetch student
         student_data = certificate_obj.student_information
 
         try:
-            # Use Website certificate template
-            if website.certificate_template and os.path.exists(website.certificate_template.path):
+            # Check template exists
+            if hasattr(website, 'certificate_template') and website.certificate_template and os.path.exists(website.certificate_template.path):
                 template_path = website.certificate_template.path
             else:
                 messages.error(request, "Website certificate template not found.")
@@ -1776,40 +1712,47 @@ def verify_certificate(request):
 
             if template_path:
                 # Open template
-                image = Image.open(template_path).convert("RGBA")
+                template = Image.open(template_path).convert("RGBA")
+
+                # Force landscape: swap width/height if portrait
+                if template.width < template.height:
+                    template = template.rotate(90, expand=True)
+
+                # Or create fixed landscape canvas (optional)
+                LANDSCAPE_SIZE = (1600, 1100)  # width x height
+                image = Image.new("RGBA", LANDSCAPE_SIZE, (255,255,255,255))
+                template = template.resize((LANDSCAPE_SIZE[0], LANDSCAPE_SIZE[1]))
+                image.paste(template, (0,0))
                 W, H = image.size
                 draw = ImageDraw.Draw(image)
 
                 # Load fonts
                 font_path = os.path.join(settings.BASE_DIR, "fonts/PlaypenSansDeva.ttf")
-                font_student = ImageFont.truetype(font_path, 60) if os.path.exists(font_path) else ImageFont.load_default()
+                font_student = ImageFont.truetype(font_path, 35) if os.path.exists(font_path) else ImageFont.load_default()
                 font_father = font_student
-                font_course = ImageFont.truetype(font_path, 80) if os.path.exists(font_path) else ImageFont.load_default()
+                font_course = ImageFont.truetype(font_path, 55) if os.path.exists(font_path) else ImageFont.load_default()
                 font_small = ImageFont.truetype(font_path, 50) if os.path.exists(font_path) else ImageFont.load_default()
                 font_watermark = ImageFont.truetype(font_path, 70) if os.path.exists(font_path) else ImageFont.load_default()
 
                 # Draw student info
-                student_name = f"{student_data.first_name} {student_data.last_name}"
-                bbox = draw.textbbox((0,0), student_name.title(), font=font_student)
-                text_w = bbox[2] - bbox[0]
-                draw.text(((W - text_w)/5.7, 860), student_name, fill="black", font=font_student)
+                student_name = f"{student_data.first_name} {student_data.last_name}".title()
+                text_w = draw.textbbox((0,0), student_name, font=font_student)[2]
+                draw.text(((W - text_w)/5.7, 443), student_name, fill="black", font=font_student)
 
                 father_name = student_data.father_name.title()
-                bbox = draw.textbbox((0,0), father_name, font=font_father)
-                text_w = bbox[2] - bbox[0]
-                draw.text(((W - text_w)/1.30, 865), father_name, fill="black", font=font_father)
+                text_w = draw.textbbox((0,0), father_name, font=font_father)[2]
+                draw.text(((W - text_w)/1.30, 443), father_name, fill="black", font=font_father)
 
                 course_name = str(student_data.programs).title()
-                bbox = draw.textbbox((0,0), course_name, font=font_course)
-                text_w = bbox[2] - bbox[0]
-                draw.text(((W - text_w)/2, 1100), course_name, fill="black", font=font_course)
+                text_w = draw.textbbox((0,0), course_name, font=font_course)[2]
+                draw.text(((W - text_w)/2.20, 550), course_name, fill="black", font=font_course)
 
                 # Draw dates
                 issue_date = certificate_obj.issue_date.strftime("%b %d %Y")
-                draw.text((W - 1000, 1350), issue_date, fill="black", font=font_small)
                 enroll_date = student_data.booking_date.strftime("%b %d %Y")
-                draw.text((W - 2000, 1350), enroll_date, fill="black", font=font_small)
                 in_year = student_data.booking_date.strftime(" %Y")
+                draw.text((W - 1000, 1350), issue_date, fill="black", font=font_small)
+                draw.text((W - 2000, 1350), enroll_date, fill="black", font=font_small)
                 draw.text((W - 1200, 1440), in_year, fill="black", font=font_small)
 
                 # Helper to paste images
@@ -1819,12 +1762,13 @@ def verify_certificate(request):
                         img = img.resize(size, resample=Image.Resampling.LANCZOS)
                         image_obj.paste(img, position, img)
 
+                # Paste signatures/stamp if active
                 if certificate_obj.is_excutive_head_signature_active:
-                    paste_image(image, website.excutive_head_signature_image, (500,350), (W-2500, H-470))
+                    paste_image(image, getattr(website, 'excutive_head_signature_image', None), (500,350), (W-2500, H-470))
                 if certificate_obj.is_shop_stamp_active:
-                    paste_image(image, website.shop_stamp_image, (400,400), (W-1820, H-560))
+                    paste_image(image, getattr(website, 'shop_stamp_image', None), (400,400), (W-1820, H-560))
                 if certificate_obj.is_course_coodinator_active:
-                    paste_image(image, website.course_coodinator, (500,350), (W-1150, H-470))
+                    paste_image(image, getattr(website, 'course_coodinator', None), (500,350), (W-1150, H-470))
 
                 # Watermark
                 if certificate_obj.is_watermark_active and certificate_obj.watermark_text:
@@ -1842,18 +1786,14 @@ def verify_certificate(request):
                     watermark_layer = watermark_layer.rotate(30, expand=False)
                     image = Image.alpha_composite(image.convert("RGBA"), watermark_layer)
 
-                # Save certificate
+                # Convert to in-memory PNG
                 buffer = BytesIO()
                 image = image.convert("RGB")
-                filename = f"{student_data.first_name}_{student_data.last_name}_{certificate_obj.certificate_regd_no}.png"
-
-                if certificate_obj.certificate_file and os.path.exists(certificate_obj.certificate_file.path):
-                    os.remove(certificate_obj.certificate_file.path)
-
                 image.save(buffer, format="PNG")
                 buffer.seek(0)
-                certificate_obj.certificate_file.save(filename, ContentFile(buffer.getvalue()), save=True)
-                certificate_img_url = certificate_obj.certificate_file.url
+
+                # Encode as base64 for HTML
+                certificate_img_url = "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode()
 
                 messages.success(request, "Certificate generated successfully.")
 

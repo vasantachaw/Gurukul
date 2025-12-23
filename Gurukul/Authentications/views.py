@@ -6,6 +6,9 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from Authentications.models import Profile
 from MainApps import models
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
 
 
 # ------------------------------
@@ -153,6 +156,7 @@ def login_view(request):
     return redirect("/")
 
 
+
 @login_required
 def update_profile(request):
     if request.method == "POST":
@@ -178,7 +182,18 @@ def update_profile(request):
         profile.dob = request.POST.get("dob", profile.dob)
 
         if "pr_pic" in request.FILES:
-            profile.pr_pic = request.FILES["pr_pic"]
+            image = request.FILES["pr_pic"]
+            img = Image.open(image)
+            img_format = img.format  # Keep original format
+            buffer = BytesIO()
+            quality = 90  # Start with high quality
+            img.save(buffer, format=img_format, quality=quality)
+            while buffer.tell() > 100 * 1024 and quality > 10:
+                quality -= 5
+                buffer.seek(0)
+                buffer.truncate()
+                img.save(buffer, format=img_format, quality=quality)
+            profile.pr_pic.save(image.name, ContentFile(buffer.getvalue()), save=False)
 
         profile.save()
 
@@ -187,7 +202,6 @@ def update_profile(request):
         )
 
     return JsonResponse({"success": False, "message": "Invalid request method."})
-
 
 @login_required
 def change_password(request):

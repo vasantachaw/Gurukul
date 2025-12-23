@@ -118,12 +118,35 @@
                             <div class="select-custom">
                                 <select class="tf-select w-100" id="payment-method" required>
                                     <option value="">Select Payment Method</option>
+
+                                    <!-- COD always available -->
                                     <option value="cod">Cash on Delivery</option>
-                                    <option value="khalti">Khalti</option>
-                                    <option value="esewa">eSewa</option>
-                                    <option value="paypal">PayPal</option>
+
+                                    <!-- Khalti -->
+                                    {% if 'khalti' in active_gateways %}
+                                        <option value="khalti">Khalti</option>
+                                    {% else %}
+                                        <option value="khalti" disabled>
+                                            Khalti (Integration Soon)
+                                        </option>
+                                    {% endif %}
+
+                                    <!-- eSewa -->
+                                    {% if 'esewa' in active_gateways %}
+                                        <option value="esewa">eSewa</option>
+                                    {% else %}
+                                        <option value="esewa" disabled>
+                                            eSewa (Integration Soon)
+                                        </option>
+                                    {% endif %}
+
+                                    <!-- PayPal -->
+                                    <option value="paypal" disabled>
+                                        PayPal (Integration Soon)
+                                    </option>
                                 </select>
                             </div>
+
                         </fieldset>
 
                         <button type="button" id="place-order"

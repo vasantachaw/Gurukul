@@ -7,7 +7,9 @@ from django.contrib.auth.models import User
 from django_ckeditor_5.fields import CKEditor5Field
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
-
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
 # ------------------------------
 # Utility Functions
 # ------------------------------
@@ -24,7 +26,6 @@ def generate_unique_code(model_class, field_name="product_code", length=6):
         filter_kwargs = {field_name: code}
         if not model_class.objects.filter(**filter_kwargs).exists():
             return code
-
 # ------------------------------
 # Website Models
 # ------------------------------
@@ -41,15 +42,6 @@ class Website(models.Model):
     address = models.TextField(blank=True, null=True)
     pan_no = models.CharField(max_length=20, blank=True, null=True)
     zip_code = models.CharField(max_length=20, blank=True, null=True)
-
-    # Social Links & Apps
-    android_app = models.FileField(upload_to="apps/android/", blank=True, null=True,
-                                   help_text="Upload your Android APK file.")
-    desktop_app = models.FileField(upload_to="apps/desktop/", blank=True, null=True,
-                                   help_text="Upload your Desktop application file.")
-    ios_app = models.FileField(upload_to="apps/ios/", blank=True, null=True,
-                               help_text="Upload your iOS IPA file.")
-    
     certificate_template = models.FileField(upload_to='certificate_template/', blank=True, null=True)
     excutive_head_signature_image = models.FileField(upload_to='executive_head_signature/',blank=True,null=True)
     shop_stamp_image = models.FileField(upload_to='shop_stamp/',blank=True,null=True)
@@ -60,19 +52,20 @@ class Website(models.Model):
         null=True
     )
 
+    # Social Media & Apps
     fb = models.URLField(blank=True, null=True)
-    insta = models.URLField(blank=True, null=True)
-    twitter = models.URLField(blank=True, null=True)
-    linkedin = models.URLField(blank=True, null=True)
-    youtube = models.URLField(blank=True, null=True)
     tiktok = models.URLField(blank=True, null=True)
-    whatsapp = models.URLField(blank=True, null=True)
-    telegram = models.URLField(blank=True, null=True)
-    pinterest = models.URLField(blank=True, null=True)
-    snapchat = models.URLField(blank=True, null=True)
-    reddit = models.URLField(blank=True, null=True)
-    github = models.URLField(blank=True, null=True)
-    discord = models.URLField(blank=True, null=True)
+    linkedin = models.URLField(blank=True, null=True)
+    whatsapp_number = models.CharField(
+        max_length=15,
+        blank=True,
+        null=True,
+        help_text="Enter your WhatsApp number in international format (e.g., +977XXXXXXXXX)"
+    )
+
+    android_app = models.FileField(upload_to="apps/android/", blank=True, null=True)
+    desktop_app = models.FileField(upload_to="apps/desktop/", blank=True, null=True)
+    ios_app = models.FileField(upload_to="apps/ios/", blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -86,6 +79,13 @@ class Website(models.Model):
     @staticmethod
     def get_current_site():
         return Site.objects.get_current().domain
+
+    def get_whatsapp_link(self):
+        """Return a WhatsApp click-to-chat URL if number is set."""
+        if self.whatsapp_number:
+            number = self.whatsapp_number.replace(" ", "").replace("-", "")
+            return f"https://wa.me/{number}"
+        return None
 
 
 class WebsiteBanner(models.Model):
@@ -215,7 +215,6 @@ class PcPheripherals(models.Model):
 
     def __str__(self):
         return self.name
-    
 
 
 class PcPeripheralImage(models.Model):
@@ -224,6 +223,25 @@ class PcPeripheralImage(models.Model):
 
     def __str__(self):
         return f"{self.peripheral.name} Image"
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            img_format = img.format
+
+            # Resize image to max 800x800 px using LANCZOS resampling
+            max_dimensions = (800, 800)
+            img.thumbnail(max_dimensions, Image.Resampling.LANCZOS)
+
+            # Compress image
+            buffer = BytesIO()
+            quality = 85
+            img.save(buffer, format=img_format, quality=quality)
+
+            # Replace original image with compressed one
+            self.image.save(self.image.name, ContentFile(buffer.getvalue()), save=False)
+
+        super().save(*args, **kwargs)
 
 
 # ------------------------------
@@ -347,6 +365,8 @@ class CourseBooking(models.Model):
 # ------------------------------
 # Blog Model
 # ------------------------------
+
+
 class Blog(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="blogs")
     title = models.CharField(max_length=250)
@@ -363,6 +383,25 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if self.image:
+            img = Image.open(self.image)
+            img_format = img.format
+
+            # Resize image to max 800x800 px using LANCZOS resampling
+            max_dimensions = (800, 800)
+            img.thumbnail(max_dimensions, Image.Resampling.LANCZOS)
+
+            # Compress image
+            buffer = BytesIO()
+            quality = 85
+            img.save(buffer, format=img_format, quality=quality)
+
+            # Replace original image with compressed one
+            self.image.save(self.image.name, ContentFile(buffer.getvalue()), save=False)
+
+        super().save(*args, **kwargs)
 
 # ------------------------------
 # PC Peripheral Cart
@@ -665,7 +704,6 @@ class Certificate(models.Model):
         related_name='certificates'
     )
     issue_date = models.DateTimeField(auto_now_add=True)
-    certificate_file = models.FileField(upload_to='certificates/', blank=True, null=True)
     
     # Executive Head Signature
     
